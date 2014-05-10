@@ -28,7 +28,16 @@ class LazyStringsServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		// add LazyStrings class to app container
+		$this->app['lazy-strings'] = $this->app->share(function($app) {
+			return new LazyStrings();
+		});
+
+		// add class alias
+		$this->app->booting(function() {
+			$loader = \Illuminate\Foundation\AliasLoader::getInstance();
+            $loader->alias('LazyStrings', 'Nobox\LazyStrings\LazyStrings');
+		});
 	}
 
 	/**
