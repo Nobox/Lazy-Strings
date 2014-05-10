@@ -12,6 +12,16 @@ class LazyStringsServiceProvider extends ServiceProvider {
 	protected $defer = false;
 
 	/**
+	 * Bootstrap the application events
+	 *
+	 * @return void
+	 */
+	public function boot()
+	{
+		$this->package('nobox/lazy-strings');
+	}
+
+	/**
 	 * Register the service provider.
 	 *
 	 * @return void
@@ -28,7 +38,7 @@ class LazyStringsServiceProvider extends ServiceProvider {
 	 */
 	public function provides()
 	{
-		return array();
+		return array('lazy-strings');
 	}
 
 }
