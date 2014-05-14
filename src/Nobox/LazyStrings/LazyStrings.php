@@ -45,23 +45,21 @@ class LazyStrings {
     }
 
     /**
-     * Util function that converts an object to an array
+     * Creates the array for the lang file,
+     * for the given JSON file
      *
      * @return array
      */
-    public static function objectToArray($data)
+    public function createLangArray($filename)
     {
-        if (is_array($data) || is_object($data)) {
-            $result = array();
+        $file_path = storage_path() . '/' . $this->target_folder . '/' . $filename . '.json';
+        $file = file_get_contents($file_path);
 
-            foreach ($data as $key => $value) {
-                $result[$key] = $this->objectToArray($value);
-            }
-
-            return $result;
+        if (!$file) {
+            // TODO: throw error that the file was not found?
         }
 
-        return $data;
+        return $this->objectToArray(json_decode($file));
     }
 
     /**
@@ -113,5 +111,25 @@ class LazyStrings {
 
         $strings_file = fopen($strings_path . '/' . $file, 'w');
         fwrite($strings_file, $strings);
+    }
+
+    /**
+     * Util function that converts an object to an array
+     *
+     * @return array
+     */
+    private function objectToArray($data)
+    {
+        if (is_array($data) || is_object($data)) {
+            $result = array();
+
+            foreach ($data as $key => $value) {
+                $result[$key] = $this->objectToArray($value);
+            }
+
+            return $result;
+        }
+
+        return $data;
     }
 }
