@@ -1,6 +1,7 @@
 <?php namespace Nobox\LazyStrings;
 
 use Illuminate\Support\ServiceProvider;
+use Nobox\LazyStrings\Commands\LazyConfigCommand;
 
 class LazyStringsServiceProvider extends ServiceProvider {
 
@@ -38,6 +39,13 @@ class LazyStringsServiceProvider extends ServiceProvider {
             $loader = \Illuminate\Foundation\AliasLoader::getInstance();
             $loader->alias('LazyStrings', 'Nobox\LazyStrings\LazyStrings');
         });
+
+        // register `lazy:config` command
+        $this->app['command.lazyconfig'] = $this->app->share(function($app) {
+            return new LazyConfigCommand();
+        });
+
+        $this->commands('command.lazyconfig');
     }
 
     /**
