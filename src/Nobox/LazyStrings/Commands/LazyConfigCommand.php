@@ -28,7 +28,7 @@ class LazyConfigCommand extends Command {
     *
     * @var string
     */
-    protected $docURLExample = 'https://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
+    protected $docURLExample = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
 
     /**
      * Default Lazy Strings route

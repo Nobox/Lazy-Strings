@@ -10,7 +10,7 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
      * @var array
      **/
     private $configData = array(
-        'doc_url' => 'https://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
+        'doc_url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
         'target_folder' => 'lazystrings',
         'strings_route' => 'lazy/build-copy'
     );

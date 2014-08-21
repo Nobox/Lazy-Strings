@@ -12,7 +12,7 @@ return array(
     |
     */
 
-    'csv_url' => 'https://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
+    'csv_url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
 
     /*
     |--------------------------------------------------------------------------

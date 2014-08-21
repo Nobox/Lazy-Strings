@@ -14,7 +14,7 @@ class LazyValidatorTest extends Orchestra\Testbench\TestCase
     {
         $emptyStringValidation = LazyValidator::validateDocUrl('');
         $incorrectUrlValidation = LazyValidator::validateDocUrl('http://example.com');
-        $urlValidation = LazyValidator::validateDocUrl('https://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv');
+        $urlValidation = LazyValidator::validateDocUrl('http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv');
         $nullValidation = LazyValidator::validateDocUrl(NULL);
 
         $this->assertFalse($emptyStringValidation, 'An empty string is passing as a valid url!');
