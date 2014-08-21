@@ -27,6 +27,13 @@ class LazyStrings {
     private $targetFolder;
 
     /**
+     * Strings generation route
+     *
+     * @var string
+     **/
+    private $stringsRoute;
+
+    /**
      * Raw strings
      *
      * @var array
@@ -46,6 +53,7 @@ class LazyStrings {
         $this->csvUrl = Config::get('lazystrings' . $configDelimiter . 'csv_url');
         $this->sheets = Config::get('lazystrings' . $configDelimiter . 'sheets');
         $this->targetFolder = Config::get('lazystrings' . $configDelimiter . 'target_folder');
+        $this->stringsRoute = Config::get('lazystrings' . $configDelimiter . 'strings_route');
 
         $this->strings['refreshed_by'] = Request::server('DOCUMENT_ROOT');
         $this->strings['refreshed_on'] = date(DATE_RFC822, time());
@@ -68,6 +76,8 @@ class LazyStrings {
         else {
             throw new \Exception('No sheets were provided.');
         }
+
+        print_r($this->strings);
     }
 
     /**
@@ -108,10 +118,6 @@ class LazyStrings {
             }
 
             fclose($fileOpen);
-
-            // TODO: Echo the copy in a pretty way
-            // print_r($this->strings);
-            // echo '<br><br>';
         }
 
         return json_encode((object) $this->strings, JSON_PRETTY_PRINT) . PHP_EOL;
@@ -156,5 +162,15 @@ class LazyStrings {
         }
 
         return $data;
+    }
+
+    /**
+     * Get the strings generation route name
+     *
+     * @return string
+     **/
+    public function getStringsRoute()
+    {
+        return $this->stringsRoute;
     }
 }

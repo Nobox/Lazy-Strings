@@ -20,6 +20,8 @@ class LazyStringsServiceProvider extends ServiceProvider {
     public function boot()
     {
         $this->package('nobox/lazy-strings');
+
+        include __DIR__ . '/../../routes.php';
     }
 
     /**
