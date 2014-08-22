@@ -34,14 +34,15 @@ class LazyStrings {
     private $stringsRoute;
 
     /**
-     * Raw strings
+     * Some basic data when strings are generated
      *
      * @var array
      **/
-    private $strings = array();
+    private $stringsMetadata = array();
 
     /**
      * Setting values from config files
+     * Initial setup
      *
      * @return void
      **/
@@ -55,21 +56,51 @@ class LazyStrings {
         $this->targetFolder = Config::get('lazystrings' . $configDelimiter . 'target_folder');
         $this->stringsRoute = Config::get('lazystrings' . $configDelimiter . 'strings_route');
 
-        $this->strings['refreshed_by'] = Request::server('DOCUMENT_ROOT');
-        $this->strings['refreshed_on'] = date(DATE_RFC822, time());
+        $this->stringsMetadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
+        $this->stringsMetadata['refreshed_on'] = date(DATE_RFC822, time());
     }
 
     /**
      * Generates the copy from the sheets
+     * Language files and JSON for storage
      *
      * @return void
      **/
     public function generateStrings()
     {
+        $localePath = app_path() . '/lang';
+
         if (count($this->sheets) > 0) {
-            foreach($this->sheets as $key => $value) {
-                $this->burnStrings($this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $value),
-                                   $this->targetFolder, $key . '.json');
+            foreach($this->sheets as $locale => $csvId) {
+                $localeStrings = array();
+
+                // create locale directories (if any)
+                if (!file_exists($localePath . '/' . $locale)) {
+                    mkdir($localePath . '/' . $locale, 0777);
+                }
+
+                // if array is provided append the sheets to the same locale
+                if (is_array($csvId)) {
+                    foreach($csvId as $id) {
+                        $csvStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $id);
+                        $localeStrings = array_merge($localeStrings, $csvStrings);
+                    }
+                }
+
+                // locale has a single sheet
+                else {
+                    $localeStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $csvId);
+                }
+
+                // create strings in language file
+                $stringsFile = fopen($localePath . '/' . $locale . '/app.php', 'w');
+                $formattedCsvStrings = '<?php return ' . var_export($localeStrings, TRUE) . ';';
+                fwrite($stringsFile, $formattedCsvStrings);
+                fclose($stringsFile);
+
+                // save strings in JSON for storage
+                $this->jsonStrings($localeStrings,
+                                   $this->targetFolder, $locale . '.json');
             }
         }
 
@@ -77,41 +108,26 @@ class LazyStrings {
             throw new \Exception('No sheets were provided.');
         }
 
-        print_r($this->strings);
+        echo 'Strings generated!';
     }
 
     /**
-     * Creates the array for the lang file,
-     * for the given JSON file
-     * This should be added to Laravel internally!
+     * Get strings from Google Doc in a pretty array
      *
      * @param string
      * @return array
      **/
-    public function createLangArray($filename)
-    {
-        $filePath = storage_path() . '/' . $this->targetFolder . '/' . $filename . '.json';
-        $file = file_get_contents($filePath);
-
-        return $this->objectToArray(json_decode($file));
-    }
-
-    /**
-     * Get strings from Google Doc and converts them in JSON format
-     *
-     * @param string
-     * @return object
-     **/
     public function getCopyCsv($csvUrl)
     {
         $fileOpen = fopen($csvUrl, 'r');
+        $strings = array();
 
         if ($fileOpen !== FALSE) {
             while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== FALSE) {
                 if ($csvFile[0] != 'id') {
                     foreach($csvFile as $csvRow) {
                         if ($csvRow) {
-                            $this->strings[$csvFile[0]] = $csvRow;
+                            $strings[$csvFile[0]] = $csvRow;
                         }
                     }
                 }
@@ -120,18 +136,18 @@ class LazyStrings {
             fclose($fileOpen);
         }
 
-        return json_encode((object) $this->strings, JSON_PRETTY_PRINT) . PHP_EOL;
+        return $strings;
     }
 
     /**
-     * Burn JSON strings in a JSON file
+     * Save strings in a JSON file for storage
      *
-     * @param object
+     * @param array
      * @param string
      * @param string
      * @return void
      **/
-    private function burnStrings($strings, $folder, $file)
+    private function jsonStrings($strings, $folder, $file)
     {
         $stringsPath = storage_path() . '/' . $folder;
 
@@ -140,28 +156,9 @@ class LazyStrings {
         }
 
         $stringsFile = fopen($stringsPath . '/' . $file, 'w');
-        fwrite($stringsFile, $strings);
-    }
-
-    /**
-     * Util function that converts an object to an array
-     *
-     * @param object
-     * @return array
-     **/
-    private function objectToArray($data)
-    {
-        if (is_array($data) || is_object($data)) {
-            $result = array();
-
-            foreach ($data as $key => $value) {
-                $result[$key] = $this->objectToArray($value);
-            }
-
-            return $result;
-        }
-
-        return $data;
+        $jsonStrings = json_encode($strings, JSON_PRETTY_PRINT);
+        fwrite($stringsFile, $jsonStrings);
+        fclose($stringsFile);
     }
 
     /**
