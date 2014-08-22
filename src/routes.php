@@ -10,7 +10,9 @@
 |
 */
 
-Route::get($this->app['lazy-strings']->getStringsRoute(), function () {
+$stringsRoute = (is_array($this->app['lazy-strings']->getStringsRoute())) ? 'lazy/build-copy' : $this->app['lazy-strings']->getStringsRoute();
+
+Route::get($stringsRoute, function () {
     $lazyStrings = $this->app['lazy-strings'];
     $lazyStrings->generateStrings();
 });
