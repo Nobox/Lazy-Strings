@@ -79,7 +79,7 @@ class LazyConfigCommand extends Command {
 
         $this->info('Selected route is: "' . $selectedRoute . '"');
 
-        $selectedTargetFolder = $this->ask('What\'s your target folder? (Default is: "' . $this->defaultTargetFolder . '")');
+        $selectedTargetFolder = $this->ask('What\'s your target folder name for storage? (Default is: "' . $this->defaultTargetFolder . '")');
 
         if (is_null($selectedTargetFolder)) {
             $selectedTargetFolder = $this->defaultTargetFolder;

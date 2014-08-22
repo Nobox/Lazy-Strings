@@ -6,9 +6,8 @@ return array(
     |--------------------------------------------------------------------------
     | Google spreadsheet public URL
     |--------------------------------------------------------------------------
-    |
-    | Remember to publish the file each time you make changes.
-    | File -> Publish to the web...
+    | Ex: http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv
+    | File gets published automatically each time you make changes.
     |
     */
 
@@ -20,11 +19,13 @@ return array(
     |--------------------------------------------------------------------------
     |
     | Specify here all the spreadsheets in your Google Doc.
-    | Format: 'file_name' => sheet_number
+    | Format: 'locale' => sheet_id
     |
     */
 
-    'sheets' => array(),
+    'sheets' => array(
+        'en' => 0
+    ),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,7 +43,7 @@ return array(
     | LazyStrings route
     |--------------------------------------------------------------------------
     |
-    | Route that will be used to generate the JSON files.
+    | Route that will be used to generate the strings.
     |
     */
 
