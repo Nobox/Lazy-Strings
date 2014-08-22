@@ -107,8 +107,6 @@ class LazyStrings {
         else {
             throw new \Exception('No sheets were provided.');
         }
-
-        echo 'Strings generated!';
     }
 
     /**
@@ -169,5 +167,15 @@ class LazyStrings {
     public function getStringsRoute()
     {
         return $this->stringsRoute;
+    }
+
+    /**
+     * Get string generation metadata
+     *
+     * @return array
+     **/
+    public function getStringsMetadata()
+    {
+        return $this->stringsMetadata;
     }
 }
