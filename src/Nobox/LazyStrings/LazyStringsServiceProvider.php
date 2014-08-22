@@ -2,6 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use Nobox\LazyStrings\Commands\LazyConfigCommand;
+use Nobox\LazyStrings\Commands\LazyDeployCommand;
 
 class LazyStringsServiceProvider extends ServiceProvider {
 
@@ -47,7 +48,13 @@ class LazyStringsServiceProvider extends ServiceProvider {
             return new LazyConfigCommand();
         });
 
+        // register `lazy:deploy` command
+        $this->app['command.lazydeploy'] = $this->app->share(function($app) {
+            return new LazyDeployCommand();
+        });
+
         $this->commands('command.lazyconfig');
+        $this->commands('command.lazydeploy');
     }
 
     /**
