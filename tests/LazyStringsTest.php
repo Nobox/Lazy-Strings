@@ -45,9 +45,7 @@ class LazyStringsTest extends Orchestra\Testbench\TestCase
     public function testGetCopyFromCsv()
     {
         $generatedStrings = $this->lazyStrings->getCopyCsv($this->correctDocUrl);
-        $stringsArray = json_decode($generatedStrings, true);
-
-        $this->assertArrayHasKey('foo', $stringsArray, 'Strings array not parsed correctly.');
+        $this->assertArrayHasKey('foo', $generatedStrings, 'Strings array not parsed correctly.');
     }
 
     /**
