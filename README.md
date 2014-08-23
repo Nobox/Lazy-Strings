@@ -31,6 +31,9 @@ There are two ways to create your configuration file. You can use the included a
 ```
 
 - `strings_route` This is the route that will be used to generate the strings. Visit `http://my-app.com/lazy/build-copy` and your strings will be updated. By default is `lazy/build-copy`.
+```php
+'strings_route' => 'lazy/build-copy'
+```
 
 - `sheets` Here you'll specify all the sheets in your Google doc (if it's more than one) with their id, each separated by locale. Use an array if using more than one sheet for a locale. For Example:
 ```php
