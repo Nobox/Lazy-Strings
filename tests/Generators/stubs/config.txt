@@ -36,7 +36,7 @@ return array(
     |
     */
 
-    'target_folder' => 'lazystrings',
+    'target_folder' => 'lazy-strings',
 
     /*
     |--------------------------------------------------------------------------
