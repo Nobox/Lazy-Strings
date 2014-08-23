@@ -24,7 +24,7 @@ class LazyConfigGenerator
      **/
     public function createConfig($data)
     {
-        $path = app_path() . '/config/lazystrings.php';
+        $path = app_path() . '/config/lazy-strings.php';
         $template = $this->getConfigTemplate($data);
 
         if (!$this->file->exists($path)) {

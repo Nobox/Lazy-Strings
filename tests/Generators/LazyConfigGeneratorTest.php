@@ -11,7 +11,7 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
      **/
     private $configData = array(
         'doc_url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
-        'target_folder' => 'lazystrings',
+        'target_folder' => 'lazy-strings',
         'strings_route' => 'lazy/build-copy'
     );
 
@@ -57,7 +57,7 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
         $file = Mockery::mock('Illuminate\Filesystem\Filesystem[put]');
 
         $file->shouldReceive('put')
-             ->with(app_path() . '/config/lazystrings.php', file_get_contents(__DIR__ . '/stubs/config.txt'))
+             ->with(app_path() . '/config/lazy-strings.php', file_get_contents(__DIR__ . '/stubs/config.txt'))
              ->once()
              ->andReturn(1);
 
