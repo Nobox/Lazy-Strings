@@ -13,6 +13,21 @@ Add Lazy Strings to your composer.json file.
 }
 ```
 
+Run the following composer command to install Lazy Strings.
+```bash
+composer update
+```
+
+## Register Lazy Strings
+Register Lazy Strings service provider in the `providers` array located in `app/config/app.php`
+```php
+'providers' => array(
+    // ...
+
+    'Nobox\LazyStrings\LazyStringsServiceProvider'
+)
+```
+
 ## Publish assets
 This package uses some pretty CSS and JS from bootstrap.
 ```bash
