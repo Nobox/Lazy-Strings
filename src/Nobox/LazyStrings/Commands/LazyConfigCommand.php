@@ -42,7 +42,7 @@ class LazyConfigCommand extends Command {
      *
      * @var string
      **/
-    protected $defaultTargetFolder = 'lazystrings';
+    protected $defaultTargetFolder = 'lazy-strings';
 
     /**
      * Create a new command instance.
