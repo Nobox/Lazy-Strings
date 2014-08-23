@@ -2,6 +2,8 @@
 
 Laravel 4 package that creates localized strings from a Google Docs Spreadsheet.
 
+[![Build Status](https://travis-ci.org/Nobox/Lazy-Strings.svg?branch=master)](https://travis-ci.org/Nobox/Lazy-Strings)
+
 ## Installation
 Add Lazy Strings to your composer.json file.
 
