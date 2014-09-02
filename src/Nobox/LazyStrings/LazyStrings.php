@@ -35,6 +35,13 @@ class LazyStrings {
     private $stringsRoute;
 
     /**
+     * Filename for the generated language file.
+     *
+     * @var string
+     **/
+    private $languageFilename = 'app';
+
+    /**
      * Some basic data when strings are generated
      *
      * @var array
@@ -94,7 +101,7 @@ class LazyStrings {
                 }
 
                 // create strings in language file
-                $stringsFile = fopen($localePath . '/' . $locale . '/app.php', 'w');
+                $stringsFile = fopen($localePath . '/' . $locale . '/' . $this->languageFilename . '.php', 'w');
                 $formattedCsvStrings = '<?php return ' . var_export($localeStrings, TRUE) . ';';
                 fwrite($stringsFile, $formattedCsvStrings);
                 fclose($stringsFile);
