@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
 
 class LazyStrings {
 
@@ -75,8 +76,8 @@ class LazyStrings {
                 $localeStrings = array();
 
                 // create locale directories (if any)
-                if (!file_exists($localePath . '/' . $locale)) {
-                    mkdir($localePath . '/' . $locale, 0777);
+                if (!File::exists($localePath . '/' . $locale)) {
+                    File::makeDirectory($localePath . '/' . $locale, 0777);
                 }
 
                 // if array is provided append the sheets to the same locale
@@ -149,8 +150,8 @@ class LazyStrings {
     {
         $stringsPath = storage_path() . '/' . $folder;
 
-        if (!file_exists($stringsPath)) {
-            mkdir($stringsPath, 0777);
+        if (!File::exists($stringsPath)) {
+            File::makeDirectory($stringsPath, 0777);
         }
 
         $stringsFile = fopen($stringsPath . '/' . $file, 'w');
