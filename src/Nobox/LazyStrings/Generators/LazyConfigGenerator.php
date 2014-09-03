@@ -5,7 +5,7 @@ use Illuminate\Filesystem\Filesystem;
 class LazyConfigGenerator
 {
     /**
-     * File to generate
+     * Filesystem instance
      *
      * @var Filesystem
      **/
