@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\File;
+use Illuminate\Filesystem\Filesystem;
 
 class LazyStrings {
 
@@ -49,12 +49,19 @@ class LazyStrings {
     private $stringsMetadata = array();
 
     /**
+     * Filesystem instance
+     *
+     * @var Filesystem
+     **/
+    private $file;
+
+    /**
      * Setting values from config files
      * Initial setup
      *
      * @return void
      **/
-    public function __construct()
+    public function __construct(Filesystem $file)
     {
         // select correct config file (command line or package config)
         $configDelimiter = (Config::get('lazy-strings.csv_url') != NULL) ? '.' : '::';
@@ -63,6 +70,7 @@ class LazyStrings {
         $this->sheets = Config::get('lazy-strings' . $configDelimiter . 'sheets');
         $this->targetFolder = Config::get('lazy-strings' . $configDelimiter . 'target_folder');
         $this->stringsRoute = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
+        $this->file = $file;
 
         $this->stringsMetadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
         $this->stringsMetadata['refreshed_on'] = date(DATE_RFC822, time());
@@ -83,8 +91,8 @@ class LazyStrings {
                 $localeStrings = array();
 
                 // create locale directories (if any)
-                if (!File::exists($localePath . '/' . $locale)) {
-                    File::makeDirectory($localePath . '/' . $locale, 0777);
+                if (!$this->file->exists($localePath . '/' . $locale)) {
+                    $this->file->makeDirectory($localePath . '/' . $locale, 0777);
                 }
 
                 // if array is provided append the sheets to the same locale
@@ -103,8 +111,8 @@ class LazyStrings {
                 // create strings in language file
                 $stringsFile = $localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
                 $formattedCsvStrings = '<?php return ' . var_export($localeStrings, TRUE) . ';';
-                
-                File::put($stringsFile, $formattedCsvStrings);
+
+                $this->file->put($stringsFile, $formattedCsvStrings);
 
                 // save strings in JSON for storage
                 $this->jsonStrings($localeStrings,
@@ -157,14 +165,14 @@ class LazyStrings {
     {
         $stringsPath = storage_path() . '/' . $folder;
 
-        if (!File::exists($stringsPath)) {
-            File::makeDirectory($stringsPath, 0777);
+        if (!$this->file->exists($stringsPath)) {
+            $this->file->makeDirectory($stringsPath, 0777);
         }
 
         $stringsFile = $stringsPath . '/' . $file;
         $jsonStrings = json_encode($strings, JSON_PRETTY_PRINT);
 
-        File::put($stringsFile, $jsonStrings);
+        $this->file->put($stringsFile, $jsonStrings);
     }
 
     /**

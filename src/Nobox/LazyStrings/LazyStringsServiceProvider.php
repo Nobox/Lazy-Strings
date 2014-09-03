@@ -1,6 +1,8 @@
 <?php namespace Nobox\LazyStrings;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Filesystem\Filesystem;
+
 use Nobox\LazyStrings\Commands\LazyConfigCommand;
 use Nobox\LazyStrings\Commands\LazyDeployCommand;
 
@@ -34,7 +36,7 @@ class LazyStringsServiceProvider extends ServiceProvider {
     {
         // add LazyStrings class to app container
         $this->app['lazy-strings'] = $this->app->share(function($app) {
-            return new LazyStrings();
+            return new LazyStrings(new Filesystem);
         });
 
         // add class alias
