@@ -101,10 +101,10 @@ class LazyStrings {
                 }
 
                 // create strings in language file
-                $stringsFile = fopen($localePath . '/' . $locale . '/' . $this->languageFilename . '.php', 'w');
+                $stringsFile = $localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
                 $formattedCsvStrings = '<?php return ' . var_export($localeStrings, TRUE) . ';';
-                fwrite($stringsFile, $formattedCsvStrings);
-                fclose($stringsFile);
+                
+                File::put($stringsFile, $formattedCsvStrings);
 
                 // save strings in JSON for storage
                 $this->jsonStrings($localeStrings,
@@ -161,10 +161,10 @@ class LazyStrings {
             File::makeDirectory($stringsPath, 0777);
         }
 
-        $stringsFile = fopen($stringsPath . '/' . $file, 'w');
+        $stringsFile = $stringsPath . '/' . $file;
         $jsonStrings = json_encode($strings, JSON_PRETTY_PRINT);
-        fwrite($stringsFile, $jsonStrings);
-        fclose($stringsFile);
+
+        File::put($stringsFile, $jsonStrings);
     }
 
     /**
