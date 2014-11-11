@@ -2,3 +2,5 @@
 composer.phar
 composer.lock
 .DS_Store
+Lazy-Strings.sublime-project
+Lazy-Strings.sublime-workspace
