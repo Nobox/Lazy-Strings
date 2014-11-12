@@ -1,6 +1,7 @@
 <?php
 
 use Nobox\LazyStrings\LazyStrings;
+use Illuminate\Filesystem\Filesystem;
 
 class LazyStringsTest extends Orchestra\Testbench\TestCase
 {
@@ -34,7 +35,7 @@ class LazyStringsTest extends Orchestra\Testbench\TestCase
     {
         parent::setUp();
 
-        $this->lazyStrings = new LazyStrings();
+        $this->lazyStrings = new LazyStrings(new Filesystem);
     }
 
     /**

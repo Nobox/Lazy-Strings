@@ -1,6 +1,7 @@
 <?php
 
 use Nobox\LazyStrings\Generators\LazyConfigGenerator;
+use Illuminate\Filesystem\Filesystem;
 
 class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
 {
@@ -10,7 +11,7 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
      * @var array
      **/
     private $configData = array(
-        'doc_url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
+        'doc_url'       => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
         'target_folder' => 'lazy-strings',
         'strings_route' => 'lazy/build-copy'
     );
@@ -31,7 +32,7 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
     {
         parent::setUp();
 
-        $this->configGenerator = new LazyConfigGenerator();
+        $this->configGenerator = new LazyConfigGenerator(new Filesystem);
     }
 
     /**
@@ -61,7 +62,6 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
              ->once()
              ->andReturn(1);
 
-        $this->configGenerator->setFilesystem($file);
         $this->configGenerator->createConfig($this->configData);
     }
 
