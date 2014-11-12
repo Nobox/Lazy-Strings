@@ -1,6 +1,7 @@
 <?php
 
 use Nobox\LazyStrings\LazyStrings;
+use Illuminate\Filesystem\Filesystem;
 
 class LazyStringsTest extends Orchestra\Testbench\TestCase
 {
@@ -34,7 +35,7 @@ class LazyStringsTest extends Orchestra\Testbench\TestCase
     {
         parent::setUp();
 
-        $this->lazyStrings = new LazyStrings();
+        $this->lazyStrings = new LazyStrings(new Filesystem);
     }
 
     /**
@@ -46,16 +47,5 @@ class LazyStringsTest extends Orchestra\Testbench\TestCase
     {
         $generatedStrings = $this->lazyStrings->getCopyCsv($this->correctDocUrl);
         $this->assertArrayHasKey('foo', $generatedStrings, 'Strings array not parsed correctly.');
-    }
-
-    /**
-     * Test exception when 0 sheets are provided
-     *
-     * @expectedException Exception
-     * @expectedExceptionMessage No sheets were provided.
-     **/
-    public function testNoSheetsProvidedException()
-    {
-        $this->lazyStrings->generateStrings();
     }
 }

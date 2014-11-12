@@ -5,15 +5,23 @@ use Illuminate\Filesystem\Filesystem;
 class LazyConfigGenerator
 {
     /**
-     * File to generate
+     * Filesystem instance
      *
      * @var Filesystem
      **/
     protected $file;
 
-    function __construct()
+    /**
+     * Location of where the config file will be stored
+     *
+     * @var string
+     **/
+    protected $configPath;
+
+    function __construct(Filesystem $file)
     {
-        $this->file = new Filesystem();
+        $this->file = $file;
+        $this->configPath = app_path() . '/config/lazy-strings.php';
     }
 
     /**
@@ -24,14 +32,23 @@ class LazyConfigGenerator
      **/
     public function createConfig($data)
     {
-        $path = app_path() . '/config/lazy-strings.php';
         $template = $this->getConfigTemplate($data);
 
-        if (!$this->file->exists($path)) {
-            return $this->file->put($path, $template);
+        if (!$this->configExists()) {
+            return $this->file->put($this->configPath, $template);
         }
 
         return FALSE;
+    }
+
+    /**
+     * Checks if the config file already exists
+     *
+     * @return boolean
+     **/
+    public function configExists()
+    {
+        return $this->file->exists($this->configPath);
     }
 
     /**
@@ -57,16 +74,5 @@ class LazyConfigGenerator
         );
 
         return str_replace($search, $replace, $template);
-    }
-
-    /**
-     * Set the Filesystem instance
-     *
-     * @param Filesystem $file
-     * @return void
-     **/
-    public function setFilesystem($file)
-    {
-        $this->file = $file;
     }
 }

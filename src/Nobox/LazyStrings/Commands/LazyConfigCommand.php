@@ -4,6 +4,7 @@ use Nobox\LazyStrings\Validators\LazyValidator;
 use Nobox\LazyStrings\Generators\LazyConfigGenerator;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
@@ -24,10 +25,10 @@ class LazyConfigCommand extends Command {
     protected $description = 'Initial configuration for LazyStrings.';
 
     /**
-    * Example of a google doc URL
-    *
-    * @var string
-    */
+     * Example of a google doc URL
+     *
+     * @var string
+     */
     protected $docURLExample = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
 
     /**
@@ -61,6 +62,13 @@ class LazyConfigCommand extends Command {
      */
     public function fire()
     {
+        $configGenerator = new LazyConfigGenerator(new Filesystem);
+
+        if ($configGenerator->configExists()) {
+            $this->error('Config file already exists. Please edit the config file instead.');
+            return;
+        }
+
         $selectedDocUrl = $this->ask('What\'s your google doc url? Ex. (' . $this->docURLExample . ') ');
 
         if (!LazyValidator::validateDocUrl($selectedDocUrl)) {
@@ -94,7 +102,6 @@ class LazyConfigCommand extends Command {
             'strings_route' => $selectedRoute
         );
 
-        $configGenerator = new LazyConfigGenerator();
         $configGenerator->createConfig($configData);
 
         $this->info('Config file created.');
