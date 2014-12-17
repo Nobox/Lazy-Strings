@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Filesystem\Filesystem;
 
-use Exception;
+use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyStrings {
 
@@ -95,44 +95,39 @@ class LazyStrings {
      **/
     public function generateStrings()
     {
-        $localePath = app_path() . '/lang';
+        // TODO: check that $this->csvUrl has the correct format?
+        LazyValidator::validateSheets($this->sheets);
 
-        if (count($this->sheets) > 0) {
-            foreach($this->sheets as $locale => $csvId) {
-                $localeStrings = array();
+        foreach($this->sheets as $locale => $csvId) {
+            $localeStrings = array();
 
-                // create locale directories (if any)
-                if (!$this->file->exists($localePath . '/' . $locale)) {
-                    $this->file->makeDirectory($localePath . '/' . $locale, 0777);
-                }
-
-                // if array is provided append the sheets to the same locale
-                if (is_array($csvId)) {
-                    foreach($csvId as $id) {
-                        $csvStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $id);
-                        $localeStrings = array_merge($localeStrings, $csvStrings);
-                    }
-                }
-
-                // locale has a single sheet
-                else {
-                    $localeStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $csvId);
-                }
-
-                // create strings in language file
-                $stringsFile = $localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
-                $formattedCsvStrings = '<?php return ' . var_export($localeStrings, true) . ';';
-
-                $this->file->put($stringsFile, $formattedCsvStrings);
-
-                // save strings in JSON for storage
-                $this->jsonStrings($localeStrings,
-                                   $this->targetFolder, $locale . '.json');
+            // create locale directories (if any)
+            if (!$this->file->exists($this->localePath . '/' . $locale)) {
+                $this->file->makeDirectory($this->localePath . '/' . $locale, 0777);
             }
-        }
 
-        else {
-            throw new Exception('No sheets were provided.');
+            // if array is provided append the sheets to the same locale
+            if (is_array($csvId)) {
+                foreach($csvId as $id) {
+                    $csvStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $id);
+                    $localeStrings = array_merge($localeStrings, $csvStrings);
+                }
+            }
+
+            // locale has a single sheet
+            else {
+                $localeStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $csvId);
+            }
+
+            // create strings in language file
+            $stringsFile = $this->localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
+            $formattedCsvStrings = '<?php return ' . var_export($localeStrings, true) . ';';
+
+            $this->file->put($stringsFile, $formattedCsvStrings);
+
+            // save strings in JSON for storage
+            $this->jsonStrings($localeStrings,
+                               $this->targetFolder, $locale . '.json');
         }
     }
 

@@ -1,5 +1,7 @@
 <?php namespace Nobox\LazyStrings\Validators;
 
+use Exception;
+
 class LazyValidator
 {
     /**
@@ -19,5 +21,18 @@ class LazyValidator
         }
 
         return true;
+    }
+
+    /**
+     * Make sure that at least 1 sheet id is provided
+     *
+     * @param $sheets The sheets to validate
+     * @return boolean
+     **/
+    public static function validateSheets($sheets)
+    {
+        if (count($sheets) === 0) {
+            throw new Exception('No sheets were provided.');
+        }
     }
 }
