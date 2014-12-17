@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Filesystem\Filesystem;
 
+use Exception;
+
 class LazyStrings {
 
     /**
@@ -121,7 +123,7 @@ class LazyStrings {
         }
 
         else {
-            throw new \Exception('No sheets were provided.');
+            throw new Exception('No sheets were provided.');
         }
     }
 
