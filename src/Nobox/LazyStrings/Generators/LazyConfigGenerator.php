@@ -38,7 +38,7 @@ class LazyConfigGenerator
             return $this->file->put($this->configPath, $template);
         }
 
-        return FALSE;
+        return false;
     }
 
     /**

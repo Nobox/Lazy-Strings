@@ -64,7 +64,7 @@ class LazyStrings {
     public function __construct(Filesystem $file)
     {
         // select correct config file (command line or package config)
-        $configDelimiter = (Config::get('lazy-strings.csv_url') != NULL) ? '.' : '::';
+        $configDelimiter = (Config::get('lazy-strings.csv_url') != null) ? '.' : '::';
 
         $this->csvUrl = Config::get('lazy-strings' . $configDelimiter . 'csv_url');
         $this->sheets = Config::get('lazy-strings' . $configDelimiter . 'sheets');
@@ -110,7 +110,7 @@ class LazyStrings {
 
                 // create strings in language file
                 $stringsFile = $localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
-                $formattedCsvStrings = '<?php return ' . var_export($localeStrings, TRUE) . ';';
+                $formattedCsvStrings = '<?php return ' . var_export($localeStrings, true) . ';';
 
                 $this->file->put($stringsFile, $formattedCsvStrings);
 
@@ -136,8 +136,8 @@ class LazyStrings {
         $fileOpen = fopen($csvUrl, 'r');
         $strings = array();
 
-        if ($fileOpen !== FALSE) {
-            while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== FALSE) {
+        if ($fileOpen !== false) {
+            while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
                 if ($csvFile[0] != 'id') {
                     foreach($csvFile as $csvRow) {
                         if ($csvRow) {
