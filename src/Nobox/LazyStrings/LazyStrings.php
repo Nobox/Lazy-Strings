@@ -37,6 +37,13 @@ class LazyStrings {
     private $stringsRoute;
 
     /**
+     * Path to locale folder
+     *
+     * @var string
+     **/
+    private $localePath;
+
+    /**
      * Filename for the generated language file.
      *
      * @var string
@@ -72,7 +79,9 @@ class LazyStrings {
         $this->sheets = Config::get('lazy-strings' . $configDelimiter . 'sheets');
         $this->targetFolder = Config::get('lazy-strings' . $configDelimiter . 'target_folder');
         $this->stringsRoute = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
+
         $this->file = $file;
+        $this->localePath = app_path() . '/lang';
 
         $this->stringsMetadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
         $this->stringsMetadata['refreshed_on'] = date(DATE_RFC822, time());
