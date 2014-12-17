@@ -134,7 +134,7 @@ class LazyStrings {
     /**
      * Get strings from Google Doc in a pretty array
      *
-     * @param string
+     * @param string $csvUrl Url of google doc
      * @return array
      **/
     public function getCopyCsv($csvUrl)
@@ -162,9 +162,9 @@ class LazyStrings {
     /**
      * Save strings in a JSON file for storage
      *
-     * @param array
-     * @param string
-     * @param string
+     * @param array $strings Parsed strings
+     * @param string $folder Folder to store strings
+     * @param string $file Strings filename
      * @return void
      **/
     private function jsonStrings($strings, $folder, $file)
