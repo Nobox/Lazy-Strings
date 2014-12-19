@@ -42,7 +42,7 @@ class LazyDeployCommand extends Command {
         $this->info('Deploying...');
 
         $lazyStrings = $this->laravel['lazy-strings'];
-        $lazyStrings->generateStrings();
+        $lazyStrings->generate();
 
         $this->info('Lazy Strings is now deployed.');
     }

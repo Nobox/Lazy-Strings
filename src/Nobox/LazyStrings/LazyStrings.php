@@ -93,51 +93,35 @@ class LazyStrings {
      *
      * @return void
      **/
-    public function generateStrings()
+    public function generate()
     {
         // TODO: check that $this->csvUrl has the correct format?
         LazyValidator::validateSheets($this->sheets);
 
         foreach($this->sheets as $locale => $csvId) {
-            $localeStrings = array();
-
             // create locale directories (if any)
-            if (!$this->file->exists($this->localePath . '/' . $locale)) {
-                $this->file->makeDirectory($this->localePath . '/' . $locale, 0777);
-            }
+            $this->createDirectory($this->localePath . '/' . $locale);
 
-            // if array is provided append the sheets to the same locale
-            if (is_array($csvId)) {
-                foreach($csvId as $id) {
-                    $csvStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $id);
-                    $localeStrings = array_merge($localeStrings, $csvStrings);
-                }
-            }
-
-            // locale has a single sheet
-            else {
-                $localeStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $csvId);
-            }
+            $localized = $this->localize($csvId);
 
             // create strings in language file
             $stringsFile = $this->localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
-            $formattedCsvStrings = '<?php return ' . var_export($localeStrings, true) . ';';
+            $phpFormatted = '<?php return ' . var_export($localized, true) . ';';
 
-            $this->file->put($stringsFile, $formattedCsvStrings);
+            $this->file->put($stringsFile, $phpFormatted);
 
-            // save strings in JSON for storage
-            $this->jsonStrings($localeStrings,
-                               $this->targetFolder, $locale . '.json');
+            // save strings in storage
+            $this->backup($localized, $this->targetFolder, $locale . '.json');
         }
     }
 
     /**
-     * Get strings from Google Doc in a pretty array
+     * Parse provided csv document
      *
      * @param string $csvUrl Url of google doc
      * @return array
      **/
-    public function getCopyCsv($csvUrl)
+    public function parse($csvUrl)
     {
         $fileOpen = fopen($csvUrl, 'r');
         $strings = array();
@@ -160,25 +144,64 @@ class LazyStrings {
     }
 
     /**
-     * Save strings in a JSON file for storage
+     * Append sheet array by locale
+     *
+     * @param string/array $csvId Id of csv doc
+     * @return array
+     **/
+    private function localize($csvId)
+    {
+        $strings = array();
+        $urlPart = '&single=true&gid=';
+
+        // if array is provided append the sheets to the same locale
+        if (is_array($csvId)) {
+            foreach($csvId as $id) {
+                $parsed = $this->parse($this->csvUrl . $urlPart . $id);
+                $strings = array_merge($strings, $parsed);
+            }
+        }
+
+        // locale has a single sheet
+        else {
+            $strings = $this->parse($this->csvUrl . $urlPart . $csvId);
+        }
+
+        return $strings;
+    }
+
+    /**
+     * Save backup strings in storage (JSON format)
      *
      * @param array $strings Parsed strings
      * @param string $folder Folder to store strings
      * @param string $file Strings filename
      * @return void
      **/
-    private function jsonStrings($strings, $folder, $file)
+    private function backup($strings, $folder, $file)
     {
         $stringsPath = storage_path() . '/' . $folder;
 
-        if (!$this->file->exists($stringsPath)) {
-            $this->file->makeDirectory($stringsPath, 0777);
-        }
+        $this->createDirectory($stringsPath);
 
         $stringsFile = $stringsPath . '/' . $file;
         $jsonStrings = json_encode($strings, JSON_PRETTY_PRINT);
 
         $this->file->put($stringsFile, $jsonStrings);
+    }
+
+    /**
+     * Create the specified directory.
+     * Check if it exists first.
+     *
+     * @param string $path The folder path
+     * @return void
+     **/
+    private function createDirectory($path)
+    {
+        if (!$this->file->exists($path)) {
+            $this->file->makeDirectory($path, 0777);
+        }
     }
 
     /**
@@ -196,7 +219,7 @@ class LazyStrings {
      *
      * @return string
      **/
-    public function getStringsRoute()
+    public function getRoute()
     {
         return $this->stringsRoute;
     }
@@ -206,7 +229,7 @@ class LazyStrings {
      *
      * @return array
      **/
-    public function getStringsMetadata()
+    public function getMetadata()
     {
         return $this->stringsMetadata;
     }

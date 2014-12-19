@@ -64,7 +64,7 @@ class LazyConfigCommand extends Command {
     {
         $configGenerator = new LazyConfigGenerator(new Filesystem);
 
-        if ($configGenerator->configExists()) {
+        if ($configGenerator->exists()) {
             $this->error('Config file already exists. Please edit the config file instead.');
             return;
         }
@@ -102,7 +102,7 @@ class LazyConfigCommand extends Command {
             'strings_route' => $selectedRoute
         );
 
-        $configGenerator->createConfig($configData);
+        $configGenerator->create($configData);
 
         $this->info('Config file created.');
     }
