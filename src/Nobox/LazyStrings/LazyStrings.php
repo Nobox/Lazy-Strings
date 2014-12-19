@@ -34,7 +34,7 @@ class LazyStrings {
      *
      * @var string
      **/
-    private $stringsRoute;
+    private $route;
 
     /**
      * Path to locale folder
@@ -55,7 +55,7 @@ class LazyStrings {
      *
      * @var array
      **/
-    private $stringsMetadata = array();
+    private $metadata = array();
 
     /**
      * Filesystem instance
@@ -78,13 +78,13 @@ class LazyStrings {
         $this->csvUrl = Config::get('lazy-strings' . $configDelimiter . 'csv_url');
         $this->sheets = Config::get('lazy-strings' . $configDelimiter . 'sheets');
         $this->targetFolder = Config::get('lazy-strings' . $configDelimiter . 'target_folder');
-        $this->stringsRoute = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
+        $this->route = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
 
         $this->file = $file;
         $this->localePath = app_path() . '/lang';
 
-        $this->stringsMetadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
-        $this->stringsMetadata['refreshed_on'] = date(DATE_RFC822, time());
+        $this->metadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
+        $this->metadata['refreshed_on'] = date(DATE_RFC822, time());
     }
 
     /**
@@ -221,7 +221,7 @@ class LazyStrings {
      **/
     public function getRoute()
     {
-        return $this->stringsRoute;
+        return $this->route;
     }
 
     /**
@@ -231,6 +231,6 @@ class LazyStrings {
      **/
     public function getMetadata()
     {
-        return $this->stringsMetadata;
+        return $this->metadata;
     }
 }
