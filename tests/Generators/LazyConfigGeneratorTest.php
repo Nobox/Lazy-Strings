@@ -42,7 +42,7 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
      **/
     public function testGetConfigTemplate()
     {
-        $generatedTemplate = $this->configGenerator->getConfigTemplate($this->configData);
+        $generatedTemplate = $this->configGenerator->getTemplate($this->configData);
         $expectedTemplate = file_get_contents(__DIR__ . '/stubs/config.txt');
 
         $this->assertEquals($expectedTemplate, $generatedTemplate, 'Templates are not equal!');
@@ -62,7 +62,7 @@ class LazyConfigGeneratorTest extends Orchestra\Testbench\TestCase
              ->once()
              ->andReturn(1);
 
-        $this->configGenerator->createConfig($this->configData);
+        $this->configGenerator->create($this->configData);
     }
 
 }
