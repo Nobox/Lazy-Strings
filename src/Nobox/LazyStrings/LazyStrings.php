@@ -91,10 +91,12 @@ class LazyStrings {
      * Generates the copy from the sheets
      * Language files and JSON for storage
      *
-     * @return void
+     * @return array
      **/
     public function generate()
     {
+        $strings = array();
+
         // TODO: check that $this->csvUrl has the correct format?
         LazyValidator::validateSheets($this->sheets);
 
@@ -103,6 +105,7 @@ class LazyStrings {
             $this->createDirectory($this->localePath . '/' . $locale);
 
             $localized = $this->localize($csvId);
+            $strings[$locale] = $localized;
 
             // create strings in language file
             $stringsFile = $this->localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
@@ -113,6 +116,8 @@ class LazyStrings {
             // save strings in storage
             $this->backup($localized, $this->targetFolder, $locale . '.json');
         }
+
+        return $strings;
     }
 
     /**
