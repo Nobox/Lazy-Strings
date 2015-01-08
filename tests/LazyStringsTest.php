@@ -12,13 +12,24 @@ class LazyStringsTest extends Orchestra\Testbench\TestCase
     {
         parent::setUp();
 
-        $this->lazyStrings = new LazyStrings(new Filesystem);
+        $this->file = Mockery::mock('Illuminate\Filesystem\Filesystem');
+        $this->lazyStrings = new LazyStrings($this->file);
     }
 
-    public function testParseCopyFromCsv()
+    public function tearDown()
     {
-        $correctDocUrl = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv&single=true&gid=0';
-        $parsed = $this->lazyStrings->parse($correctDocUrl);
-        $this->assertArrayHasKey('foo', $parsed, 'Strings array not parsed correctly.');
+        Mockery::close();
+    }
+
+    public function testGeneratedStrings()
+    {
+        $this->file->shouldReceive('exists')->atLeast()->times(1);
+        $this->file->shouldReceive('makeDirectory')->atLeast()->times(1);
+        $this->file->shouldReceive('put')->atLeast()->times(1);
+
+        $generated = $this->lazyStrings->generate();
+
+        $this->assertArrayHasKey('en', $generated, 'Strings array not parsed correctly.');
+        $this->assertArrayHasKey('foo', $generated['en'], 'Strings array not parsed correctly.');
     }
 }

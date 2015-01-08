@@ -4,7 +4,6 @@ use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyValidatorTest extends Orchestra\Testbench\TestCase
 {
-
     public function testValidDocUrl()
     {
         $urlValidation = LazyValidator::validateDocUrl('http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv');
