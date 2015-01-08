@@ -34,7 +34,7 @@ class LazyConfigGenerator
     {
         $template = $this->getTemplate($data);
 
-        if (!$this->exists()) {
+        if (!$this->file->exists($this->path)) {
             return $this->file->put($this->path, $template);
         }
 
