@@ -121,7 +121,7 @@ class LazyStrings {
      * @param string $csvUrl Url of google doc
      * @return array
      **/
-    public function parse($csvUrl)
+    private function parse($csvUrl)
     {
         $fileOpen = fopen($csvUrl, 'r');
         $strings = array();
