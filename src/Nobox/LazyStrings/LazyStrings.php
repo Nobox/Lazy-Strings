@@ -6,6 +6,8 @@ use Illuminate\Filesystem\Filesystem;
 
 use Nobox\LazyStrings\Validators\LazyValidator;
 
+use Exception;
+
 class LazyStrings {
 
     /**
@@ -97,7 +99,11 @@ class LazyStrings {
     {
         $strings = array();
 
-        // TODO: check that $this->csvUrl has the correct format?
+        // validate doc url and sheets
+        if (!LazyValidator::validateDocUrl($this->csvUrl)) {
+            throw new Exception('Provided doc url is not valid.');
+        }
+
         LazyValidator::validateSheets($this->sheets);
 
         foreach($this->sheets as $locale => $csvId) {
