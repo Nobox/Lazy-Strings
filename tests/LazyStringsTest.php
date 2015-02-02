@@ -5,47 +5,34 @@ use Illuminate\Filesystem\Filesystem;
 
 class LazyStringsTest extends Orchestra\Testbench\TestCase
 {
-    /**
-     * The LazyStrings instance
-     *
-     * @var LazyStrings
-     **/
-    private $lazyStrings;
+    protected $lazyStrings;
+    protected $file;
 
-    /**
-     * Correct url to google doc
-     *
-     * @var string
-     **/
-    private $correctDocUrl = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv&single=true&gid=0';
-
-    /**
-     * Incorrect url to google doc
-     *
-     * @var string
-     **/
-    private $incorrectDocUrl = 'http://fail.com';
-
-    /**
-     * Set things up before running
-     *
-     * @return void
-     **/
     public function setUp()
     {
         parent::setUp();
 
-        $this->lazyStrings = new LazyStrings(new Filesystem);
+        $this->file = Mockery::mock('Illuminate\Filesystem\Filesystem');
+        $this->lazyStrings = new LazyStrings($this->file);
     }
 
-    /**
-     * Test when getting copy from csv path
-     *
-     * @return void
-     **/
-    public function testGetCopyFromCsv()
+    public function tearDown()
     {
-        $generatedStrings = $this->lazyStrings->getCopyCsv($this->correctDocUrl);
-        $this->assertArrayHasKey('foo', $generatedStrings, 'Strings array not parsed correctly.');
+        Mockery::close();
+    }
+
+    public function testGeneratedStrings()
+    {
+        $this->file->shouldReceive('exists')->atLeast()->times(1);
+        $this->file->shouldReceive('makeDirectory')->atLeast()->times(1);
+        $this->file->shouldReceive('put')->atLeast()->times(1);
+
+        $this->lazyStrings->setCsvUrl('http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv');
+        $this->lazyStrings->setSheets(array('en' => 0));
+
+        $generated = $this->lazyStrings->generate();
+
+        $this->assertArrayHasKey('en', $generated, 'Strings array not parsed correctly.');
+        $this->assertArrayHasKey('foo', $generated['en'], 'Strings array not parsed correctly.');
     }
 }

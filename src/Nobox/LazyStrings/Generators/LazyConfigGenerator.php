@@ -16,12 +16,12 @@ class LazyConfigGenerator
      *
      * @var string
      **/
-    protected $configPath;
+    protected $path;
 
     function __construct(Filesystem $file)
     {
         $this->file = $file;
-        $this->configPath = app_path() . '/config/lazy-strings.php';
+        $this->path = app_path() . '/config/lazy-strings.php';
     }
 
     /**
@@ -30,15 +30,15 @@ class LazyConfigGenerator
      * @param type array $data
      * @return boolean
      **/
-    public function createConfig($data)
+    public function create($data)
     {
-        $template = $this->getConfigTemplate($data);
+        $template = $this->getTemplate($data);
 
-        if (!$this->configExists()) {
-            return $this->file->put($this->configPath, $template);
+        if (!$this->file->exists($this->path)) {
+            return $this->file->put($this->path, $template);
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -46,9 +46,9 @@ class LazyConfigGenerator
      *
      * @return boolean
      **/
-    public function configExists()
+    public function exists()
     {
-        return $this->file->exists($this->configPath);
+        return $this->file->exists($this->path);
     }
 
     /**
@@ -57,7 +57,7 @@ class LazyConfigGenerator
      * @param array $data
      * @return string
      **/
-    public function getConfigTemplate($data)
+    public function getTemplate($data)
     {
         $template = $this->file->get(__DIR__ . '/templates/config.txt');
 

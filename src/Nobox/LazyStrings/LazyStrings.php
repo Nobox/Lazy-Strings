@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Filesystem\Filesystem;
 
+use Nobox\LazyStrings\Validators\LazyValidator;
+
+use Exception;
+
 class LazyStrings {
 
     /**
@@ -32,7 +36,14 @@ class LazyStrings {
      *
      * @var string
      **/
-    private $stringsRoute;
+    private $route;
+
+    /**
+     * Path to locale folder
+     *
+     * @var string
+     **/
+    private $localePath;
 
     /**
      * Filename for the generated language file.
@@ -46,7 +57,7 @@ class LazyStrings {
      *
      * @var array
      **/
-    private $stringsMetadata = array();
+    private $metadata = array();
 
     /**
      * Filesystem instance
@@ -64,80 +75,70 @@ class LazyStrings {
     public function __construct(Filesystem $file)
     {
         // select correct config file (command line or package config)
-        $configDelimiter = (Config::get('lazy-strings.csv_url') != NULL) ? '.' : '::';
+        $configDelimiter = (Config::get('lazy-strings.csv_url') != null) ? '.' : '::';
 
         $this->csvUrl = Config::get('lazy-strings' . $configDelimiter . 'csv_url');
         $this->sheets = Config::get('lazy-strings' . $configDelimiter . 'sheets');
         $this->targetFolder = Config::get('lazy-strings' . $configDelimiter . 'target_folder');
-        $this->stringsRoute = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
-        $this->file = $file;
+        $this->route = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
 
-        $this->stringsMetadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
-        $this->stringsMetadata['refreshed_on'] = date(DATE_RFC822, time());
+        $this->file = $file;
+        $this->localePath = app_path() . '/lang';
+
+        $this->metadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
+        $this->metadata['refreshed_on'] = date(DATE_RFC822, time());
     }
 
     /**
      * Generates the copy from the sheets
      * Language files and JSON for storage
      *
-     * @return void
+     * @return array
      **/
-    public function generateStrings()
+    public function generate()
     {
-        $localePath = app_path() . '/lang';
+        $strings = array();
 
-        if (count($this->sheets) > 0) {
-            foreach($this->sheets as $locale => $csvId) {
-                $localeStrings = array();
-
-                // create locale directories (if any)
-                if (!$this->file->exists($localePath . '/' . $locale)) {
-                    $this->file->makeDirectory($localePath . '/' . $locale, 0777);
-                }
-
-                // if array is provided append the sheets to the same locale
-                if (is_array($csvId)) {
-                    foreach($csvId as $id) {
-                        $csvStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $id);
-                        $localeStrings = array_merge($localeStrings, $csvStrings);
-                    }
-                }
-
-                // locale has a single sheet
-                else {
-                    $localeStrings = $this->getCopyCsv($this->csvUrl . '&single=true&gid=' . $csvId);
-                }
-
-                // create strings in language file
-                $stringsFile = $localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
-                $formattedCsvStrings = '<?php return ' . var_export($localeStrings, TRUE) . ';';
-
-                $this->file->put($stringsFile, $formattedCsvStrings);
-
-                // save strings in JSON for storage
-                $this->jsonStrings($localeStrings,
-                                   $this->targetFolder, $locale . '.json');
-            }
+        // validate doc url and sheets
+        if (!LazyValidator::validateDocUrl($this->csvUrl)) {
+            throw new Exception('Provided doc url is not valid.');
         }
 
-        else {
-            throw new \Exception('No sheets were provided.');
+        LazyValidator::validateSheets($this->sheets);
+
+        foreach ($this->sheets as $locale => $csvId) {
+            // create locale directories (if any)
+            $this->createDirectory($this->localePath . '/' . $locale);
+
+            $localized = $this->localize($csvId);
+            $strings[$locale] = $localized;
+
+            // create strings in language file
+            $stringsFile = $this->localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
+            $phpFormatted = '<?php return ' . var_export($localized, true) . ';';
+
+            $this->file->put($stringsFile, $phpFormatted);
+
+            // save strings in storage
+            $this->backup($localized, $this->targetFolder, $locale . '.json');
         }
+
+        return $strings;
     }
 
     /**
-     * Get strings from Google Doc in a pretty array
+     * Parse provided csv document
      *
-     * @param string
+     * @param string $csvUrl Url of google doc
      * @return array
      **/
-    public function getCopyCsv($csvUrl)
+    private function parse($csvUrl)
     {
         $fileOpen = fopen($csvUrl, 'r');
         $strings = array();
 
-        if ($fileOpen !== FALSE) {
-            while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== FALSE) {
+        if ($fileOpen !== false) {
+            while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
                 if ($csvFile[0] != 'id') {
                     foreach($csvFile as $csvRow) {
                         if ($csvRow) {
@@ -154,20 +155,45 @@ class LazyStrings {
     }
 
     /**
-     * Save strings in a JSON file for storage
+     * Append sheet array by locale
      *
-     * @param array
-     * @param string
-     * @param string
+     * @param string/array $csvId Id of csv doc
+     * @return array
+     **/
+    private function localize($csvId)
+    {
+        $strings = array();
+        $urlPart = '&single=true&gid=';
+
+        // if array is provided append the sheets to the same locale
+        if (is_array($csvId)) {
+            foreach($csvId as $id) {
+                $parsed = $this->parse($this->csvUrl . $urlPart . $id);
+                $strings = array_merge($strings, $parsed);
+            }
+        }
+
+        // locale has a single sheet
+        else {
+            $strings = $this->parse($this->csvUrl . $urlPart . $csvId);
+        }
+
+        return $strings;
+    }
+
+    /**
+     * Save backup strings in storage (JSON format)
+     *
+     * @param array $strings Parsed strings
+     * @param string $folder Folder to store strings
+     * @param string $file Strings filename
      * @return void
      **/
-    private function jsonStrings($strings, $folder, $file)
+    private function backup($strings, $folder, $file)
     {
         $stringsPath = storage_path() . '/' . $folder;
 
-        if (!$this->file->exists($stringsPath)) {
-            $this->file->makeDirectory($stringsPath, 0777);
-        }
+        $this->createDirectory($stringsPath);
 
         $stringsFile = $stringsPath . '/' . $file;
         $jsonStrings = json_encode($strings, JSON_PRETTY_PRINT);
@@ -176,13 +202,37 @@ class LazyStrings {
     }
 
     /**
+     * Create the specified directory.
+     * Check if it exists first.
+     *
+     * @param string $path The folder path
+     * @return void
+     **/
+    private function createDirectory($path)
+    {
+        if (!$this->file->exists($path)) {
+            $this->file->makeDirectory($path, 0777);
+        }
+    }
+
+    /**
+     * Get the tabs of doc spreadsheet
+     *
+     * @return array
+     **/
+    public function getSheets()
+    {
+        return $this->sheets;
+    }
+
+    /**
      * Get the strings generation route name
      *
      * @return string
      **/
-    public function getStringsRoute()
+    public function getRoute()
     {
-        return $this->stringsRoute;
+        return $this->route;
     }
 
     /**
@@ -190,8 +240,30 @@ class LazyStrings {
      *
      * @return array
      **/
-    public function getStringsMetadata()
+    public function getMetadata()
     {
-        return $this->stringsMetadata;
+        return $this->metadata;
+    }
+
+    /**
+     * Set the google doc url
+     *
+     * @param string $url The google doc url
+     * @return void
+     **/
+    public function setCsvUrl($url)
+    {
+        $this->csvUrl = $url;
+    }
+
+    /**
+     * Set the tabs of doc spreadsheet
+     *
+     * @param array $sheets The array of sheets id's
+     * @return void
+     **/
+    public function setSheets($sheets)
+    {
+        $this->sheets = $sheets;
     }
 }
