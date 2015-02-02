@@ -106,7 +106,7 @@ class LazyStrings {
 
         LazyValidator::validateSheets($this->sheets);
 
-        foreach($this->sheets as $locale => $csvId) {
+        foreach ($this->sheets as $locale => $csvId) {
             // create locale directories (if any)
             $this->createDirectory($this->localePath . '/' . $locale);
 
