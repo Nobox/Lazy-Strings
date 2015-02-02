@@ -28,6 +28,8 @@ class LazyStringsTest extends Orchestra\Testbench\TestCase
         $this->file->shouldReceive('put')->atLeast()->times(1);
 
         $this->lazyStrings->setCsvUrl('http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv');
+        $this->lazyStrings->setSheets(array('en' => 0));
+
         $generated = $this->lazyStrings->generate();
 
         $this->assertArrayHasKey('en', $generated, 'Strings array not parsed correctly.');
