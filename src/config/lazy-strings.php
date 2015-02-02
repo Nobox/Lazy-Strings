@@ -6,12 +6,11 @@ return array(
     |--------------------------------------------------------------------------
     | Google spreadsheet public URL
     |--------------------------------------------------------------------------
-    | Ex: http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv
     | File gets published automatically each time you make changes.
     |
     */
 
-    'csv_url' => '',
+    'csv-url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
 
     /*
     |--------------------------------------------------------------------------
@@ -19,7 +18,7 @@ return array(
     |--------------------------------------------------------------------------
     |
     | Specify here all the spreadsheets in your Google Doc.
-    | Format: 'locale' => sheet_id
+    | Format: 'locale' => sheetId
     |
     */
 
@@ -36,7 +35,7 @@ return array(
     |
     */
 
-    'target_folder' => 'lazy-strings',
+    'target-folder' => 'lazy-strings',
 
     /*
     |--------------------------------------------------------------------------
@@ -47,6 +46,6 @@ return array(
     |
     */
 
-    'strings_route' => 'lazy/build-copy'
+    'strings-route' => 'lazy/build-copy'
 
 );
