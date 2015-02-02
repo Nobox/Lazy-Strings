@@ -30,7 +30,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "4.2.*",
-        "mockery/mockery": "dev-master"
+        "mockery/mockery": "dev-master",
+        "orchestra/testbench": "3.0.*"
     },
     "autoload": {
         "psr-4": {
