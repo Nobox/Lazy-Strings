@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Nobox\\LazyStrings": "src/"
+            "Nobox\\LazyStrings\\": "src/"
         }
     },
     "minimum-stability": "dev"
