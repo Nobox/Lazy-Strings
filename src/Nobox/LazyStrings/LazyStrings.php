@@ -227,6 +227,17 @@ class LazyStrings {
     }
 
     /**
+     * Set the tabs of doc spreadsheet
+     *
+     * @param array $sheets The array of sheets id's
+     * @return void
+     **/
+    public function setSheets($sheets)
+    {
+        $this->sheets = $sheets;
+    }
+
+    /**
      * Get the tabs of doc spreadsheet
      *
      * @return array
