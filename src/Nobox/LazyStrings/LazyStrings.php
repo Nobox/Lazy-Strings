@@ -216,6 +216,17 @@ class LazyStrings {
     }
 
     /**
+     * Set the google doc url
+     *
+     * @param string $url The google doc url
+     * @return void
+     **/
+    public function setCsvUrl($url)
+    {
+        $this->csvUrl = $url;
+    }
+
+    /**
      * Get the tabs of doc spreadsheet
      *
      * @return array
