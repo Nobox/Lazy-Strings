@@ -38,5 +38,10 @@
             "Nobox\\LazyStrings\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Nobox\\Tests\\LazyStrings\\": "tests/"
+        }
+    },
     "minimum-stability": "dev"
 }
