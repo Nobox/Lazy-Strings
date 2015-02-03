@@ -32,8 +32,8 @@
                     <div class="inner cover">
                         <h1 class="cover-heading">LazyStrings</h1>
                         <p class="lead">Strings have been generated successfully!</p>
-                        <p>Refreshed by: {{ $refreshed_by }}</p>
-                        <p>Refreshed on: {{ $refreshed_on }}</p>
+                        <p>Refreshed by: {{ $refreshedBy }}</p>
+                        <p>Refreshed on: {{ $refreshedOn }}</p>
                     </div>
                 </div>
             </div>
