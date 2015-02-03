@@ -74,19 +74,16 @@ class LazyStrings {
      **/
     public function __construct(Filesystem $file)
     {
-        // select correct config file (command line or package config)
-        $configDelimiter = (Config::get('lazy-strings.csv_url') != null) ? '.' : '::';
-
-        $this->csvUrl = Config::get('lazy-strings' . $configDelimiter . 'csv_url');
-        $this->sheets = Config::get('lazy-strings' . $configDelimiter . 'sheets');
-        $this->targetFolder = Config::get('lazy-strings' . $configDelimiter . 'target_folder');
-        $this->route = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
+        $this->csvUrl = Config::get('lazy-strings.csv-url');
+        $this->sheets = Config::get('lazy-strings.sheets');
+        $this->targetFolder = Config::get('lazy-strings.target-folder');
+        $this->route = Config::get('lazy-strings.strings-route');
 
         $this->file = $file;
-        $this->localePath = app_path() . '/lang';
+        $this->localePath = base_path() . '/resources/lang';
 
-        $this->metadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
-        $this->metadata['refreshed_on'] = date(DATE_RFC822, time());
+        $this->metadata['refreshedBy'] = Request::server('DOCUMENT_ROOT');
+        $this->metadata['refreshedOn'] = date(DATE_RFC822, time());
     }
 
     /**
