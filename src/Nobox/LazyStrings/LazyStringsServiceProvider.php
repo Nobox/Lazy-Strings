@@ -3,70 +3,48 @@
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Filesystem\Filesystem;
 
-use Nobox\LazyStrings\Commands\LazyConfigCommand;
 use Nobox\LazyStrings\Commands\LazyDeployCommand;
 
-class LazyStringsServiceProvider extends ServiceProvider {
+class LazyStringsServiceProvider extends ServiceProvider
+{
 
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
-     * Bootstrap the application events
+     * Perform post-registration booting of services.
      *
      * @return void
      */
     public function boot()
     {
-        $this->package('nobox/lazy-strings');
+        $views = __DIR__ . '/../../views';
+        $config = __DIR__ . '/../../config/lazy-strings.php';
+        $routes = __DIR__ . '/../../routes.php';
 
-        include __DIR__ . '/../../routes.php';
+        $this->loadViewsFrom($views, 'lazy-strings');
+
+        $this->publishes([
+            $config => config_path('lazy-strings.php'),
+        ]);
+
+        include $routes;
     }
 
     /**
-     * Register the service provider.
+     * Register bindings in the container.
      *
      * @return void
      */
     public function register()
     {
         // add LazyStrings class to app container
-        $this->app['lazy-strings'] = $this->app->share(function($app) {
+        $this->app->bind('lazy-strings', function ($app) {
             return new LazyStrings(new Filesystem);
         });
 
-        // add class alias
-        $this->app->booting(function() {
-            $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-            $loader->alias('LazyStrings', 'Nobox\LazyStrings\LazyStrings');
-        });
-
-        // register `lazy:config` command
-        $this->app['command.lazyconfig'] = $this->app->share(function($app) {
-            return new LazyConfigCommand();
-        });
-
         // register `lazy:deploy` command
-        $this->app['command.lazydeploy'] = $this->app->share(function($app) {
+        $this->app->bind('command.lazy-deploy', function ($app) {
             return new LazyDeployCommand();
         });
 
-        $this->commands('command.lazyconfig');
-        $this->commands('command.lazydeploy');
+        $this->commands('command.lazy-deploy');
     }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return array('lazy-strings');
-    }
-
 }
