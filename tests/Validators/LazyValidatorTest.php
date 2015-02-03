@@ -1,8 +1,9 @@
-<?php
+<?php namespace Nobox\Tests\LazyStrings\Validators;
 
 use Nobox\LazyStrings\Validators\LazyValidator;
+use Orchestra\Testbench\TestCase;
 
-class LazyValidatorTest extends Orchestra\Testbench\TestCase
+class LazyValidatorTest extends TestCase
 {
     public function testValidDocUrl()
     {

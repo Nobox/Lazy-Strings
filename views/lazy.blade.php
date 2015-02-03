@@ -10,13 +10,13 @@
         <title>Lazy Strings</title>
 
         <!-- Bootstrap core CSS -->
-        <link href="{{ asset('packages/nobox/lazy-strings/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('vendor/nobox/lazy-strings/css/bootstrap.min.css') }}" rel="stylesheet">
 
         <!-- Custom styles for this template -->
-        <link href="{{ asset('packages/nobox/lazy-strings/css/cover.css') }}" rel="stylesheet">
+        <link href="{{ asset('vendor/nobox/lazy-strings/css/cover.css') }}" rel="stylesheet">
 
         <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="{{ asset('packages/nobox/lazy-strings/js/ie10-viewport-bug-workaround.js') }}"></script>
+        <script src="{{ asset('vendor/nobox/lazy-strings/js/ie10-viewport-bug-workaround.js') }}"></script>
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -32,8 +32,8 @@
                     <div class="inner cover">
                         <h1 class="cover-heading">LazyStrings</h1>
                         <p class="lead">Strings have been generated successfully!</p>
-                        <p>Refreshed by: {{ $refreshed_by }}</p>
-                        <p>Refreshed on: {{ $refreshed_on }}</p>
+                        <p>Refreshed by: {{ $refreshedBy }}</p>
+                        <p>Refreshed on: {{ $refreshedOn }}</p>
                     </div>
                 </div>
             </div>
