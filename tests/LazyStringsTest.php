@@ -1,9 +1,11 @@
-<?php
+<?php namespace Nobox\Tests\LazyStrings;
 
 use Nobox\LazyStrings\LazyStrings;
 use Illuminate\Filesystem\Filesystem;
+use Orchestra\Testbench\TestCase;
+use Mockery;
 
-class LazyStringsTest extends Orchestra\Testbench\TestCase
+class LazyStringsTest extends TestCase
 {
     protected $lazyStrings;
     protected $file;
@@ -21,13 +23,20 @@ class LazyStringsTest extends Orchestra\Testbench\TestCase
         Mockery::close();
     }
 
+    protected function getPackageProviders($app)
+    {
+        return ['Nobox\LazyStrings\LazyStringsServiceProvider'];
+    }
+
     public function testGeneratedStrings()
     {
+        $url = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
+
         $this->file->shouldReceive('exists')->atLeast()->times(1);
         $this->file->shouldReceive('makeDirectory')->atLeast()->times(1);
         $this->file->shouldReceive('put')->atLeast()->times(1);
 
-        $this->lazyStrings->setCsvUrl('http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv');
+        $this->lazyStrings->setCsvUrl($url);
         $this->lazyStrings->setSheets(array('en' => 0));
 
         $generated = $this->lazyStrings->generate();
