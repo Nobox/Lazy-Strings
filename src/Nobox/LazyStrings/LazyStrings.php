@@ -8,7 +8,8 @@ use Nobox\LazyStrings\Validators\LazyValidator;
 
 use Exception;
 
-class LazyStrings {
+class LazyStrings
+{
 
     /**
      * Google doc url
@@ -137,7 +138,7 @@ class LazyStrings {
         if ($fileOpen !== false) {
             while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
                 if ($csvFile[0] != 'id') {
-                    foreach($csvFile as $csvRow) {
+                    foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
                             $strings[$csvFile[0]] = $csvRow;
                         }
@@ -153,6 +154,7 @@ class LazyStrings {
 
     /**
      * Append sheet array by locale
+     * If array is provided append the sheets to the same locale
      *
      * @param string/array $csvId Id of csv doc
      * @return array
@@ -162,16 +164,12 @@ class LazyStrings {
         $strings = array();
         $urlPart = '&single=true&gid=';
 
-        // if array is provided append the sheets to the same locale
         if (is_array($csvId)) {
-            foreach($csvId as $id) {
+            foreach ($csvId as $id) {
                 $parsed = $this->parse($this->csvUrl . $urlPart . $id);
                 $strings = array_merge($strings, $parsed);
             }
-        }
-
-        // locale has a single sheet
-        else {
+        } else {
             $strings = $this->parse($this->csvUrl . $urlPart . $csvId);
         }
 
