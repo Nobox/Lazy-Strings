@@ -15,9 +15,9 @@ class LazyStringsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $views = __DIR__ . '/../../views';
-        $config = __DIR__ . '/../../config/lazy-strings.php';
-        $routes = __DIR__ . '/../../routes.php';
+        $views = __DIR__ . '/../views';
+        $config = __DIR__ . '/../config/lazy-strings.php';
+        $routes = __DIR__ . '/routes.php';
 
         $this->loadViewsFrom($views, 'lazy-strings');
 
