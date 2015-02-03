@@ -9,7 +9,7 @@ Add Lazy Strings to your composer.json file.
 
 ```json
 "require": {
-  "nobox/lazy-strings": "dev-master"
+  "nobox/lazy-strings": "dev-laravel-4"
 }
 ```
 
