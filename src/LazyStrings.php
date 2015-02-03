@@ -8,7 +8,8 @@ use Nobox\LazyStrings\Validators\LazyValidator;
 
 use Exception;
 
-class LazyStrings {
+class LazyStrings
+{
 
     /**
      * Google doc url
@@ -74,19 +75,16 @@ class LazyStrings {
      **/
     public function __construct(Filesystem $file)
     {
-        // select correct config file (command line or package config)
-        $configDelimiter = (Config::get('lazy-strings.csv_url') != null) ? '.' : '::';
-
-        $this->csvUrl = Config::get('lazy-strings' . $configDelimiter . 'csv_url');
-        $this->sheets = Config::get('lazy-strings' . $configDelimiter . 'sheets');
-        $this->targetFolder = Config::get('lazy-strings' . $configDelimiter . 'target_folder');
-        $this->route = Config::get('lazy-strings' . $configDelimiter . 'strings_route');
+        $this->csvUrl = Config::get('lazy-strings.csv-url');
+        $this->sheets = Config::get('lazy-strings.sheets');
+        $this->targetFolder = Config::get('lazy-strings.target-folder');
+        $this->route = Config::get('lazy-strings.strings-route');
 
         $this->file = $file;
-        $this->localePath = app_path() . '/lang';
+        $this->localePath = base_path() . '/resources/lang';
 
-        $this->metadata['refreshed_by'] = Request::server('DOCUMENT_ROOT');
-        $this->metadata['refreshed_on'] = date(DATE_RFC822, time());
+        $this->metadata['refreshedBy'] = Request::server('DOCUMENT_ROOT');
+        $this->metadata['refreshedOn'] = date(DATE_RFC822, time());
     }
 
     /**
@@ -140,7 +138,7 @@ class LazyStrings {
         if ($fileOpen !== false) {
             while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
                 if ($csvFile[0] != 'id') {
-                    foreach($csvFile as $csvRow) {
+                    foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
                             $strings[$csvFile[0]] = $csvRow;
                         }
@@ -156,6 +154,7 @@ class LazyStrings {
 
     /**
      * Append sheet array by locale
+     * If array is provided append the sheets to the same locale
      *
      * @param string/array $csvId Id of csv doc
      * @return array
@@ -165,16 +164,12 @@ class LazyStrings {
         $strings = array();
         $urlPart = '&single=true&gid=';
 
-        // if array is provided append the sheets to the same locale
         if (is_array($csvId)) {
-            foreach($csvId as $id) {
+            foreach ($csvId as $id) {
                 $parsed = $this->parse($this->csvUrl . $urlPart . $id);
                 $strings = array_merge($strings, $parsed);
             }
-        }
-
-        // locale has a single sheet
-        else {
+        } else {
             $strings = $this->parse($this->csvUrl . $urlPart . $csvId);
         }
 

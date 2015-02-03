@@ -1,6 +1,6 @@
 # Lazy Strings
 
-Laravel 4 package that creates localized strings from a Google Docs Spreadsheet.
+Laravel 5 package that creates localized strings from a Google Docs Spreadsheet.
 
 [![Build Status](https://travis-ci.org/Nobox/Lazy-Strings.svg?branch=development)](https://travis-ci.org/Nobox/Lazy-Strings)
 
@@ -19,7 +19,7 @@ composer update
 ```
 
 ## Register Lazy Strings
-Register Lazy Strings service provider in the `providers` array located in `app/config/app.php`
+Register Lazy Strings service provider in the `providers` array located in `config/app.php`
 ```php
 'providers' => array(
     // ...
@@ -28,28 +28,28 @@ Register Lazy Strings service provider in the `providers` array located in `app/
 )
 ```
 
-## Publish assets
-This package uses some pretty CSS and JS from bootstrap.
+## Publish configuration and assets
+This package uses some basic configuration and pretty CSS and JS from bootstrap.
 ```bash
-php artisan asset:publish nobox/lazy-strings
+php artisan vendor:publish
 ```
 
-## Create configuration file
-There are two ways to create your configuration file. You can use the included artisan command `php artisan lazy:config` to generate the configuration file with a series of questions or use the package config file with `php artisan config:publish nobox/lazy-strings`. Each configuration item is described below.
+## Configuration
+Configuration is pretty simple, each configuration item is described below.
 
-- `csv_url` Add the Google spreadsheet published url under `File -> Publish to the web...`, replace `pubhtml` with `export?format=csv` at the end and use `http` on the url. Remember that this document must be available to anyone. Use `Public on the web` on your `Sharing settings`. If not, Lazy Strings won't be able to parse it.
+- `csv-url` Add the Google spreadsheet published url under `File -> Publish to the web...`, replace `pubhtml` with `export?format=csv` at the end and use `http` on the url. Remember that this document must be available to anyone. Use `Public on the web` on your `Sharing settings`. If not, Lazy Strings won't be able to parse it.
 ```php
-'csv_url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv'
+'csv-url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv'
 ```
 
-- `target_folder` This folder will be in your `app/storage` path and it just saves a backup of your strings in `JSON` format. By default is `lazy-strings`.
+- `target-folder` This folder will be in your `storage` folder and it just saves a backup of your strings in `JSON` format. By default is `lazy-strings`.
 ```php
-'target_folder' => 'lazy-strings'
+'target-folder' => 'lazy-strings'
 ```
 
-- `strings_route` This is the route that will be used to generate the strings. Visit `http://my-app.com/lazy/build-copy` and your strings will be updated. By default is `lazy/build-copy`.
+- `strings-route` This is the route that will be used to generate the strings. Visit `http://my-app.com/lazy/build-copy` and your strings will be updated. By default is `lazy/build-copy`.
 ```php
-'strings_route' => 'lazy/build-copy'
+'strings-route' => 'lazy/build-copy'
 ```
 
 - `sheets` Here you'll specify all the sheets in your Google doc (if it's more than one) with their id, each separated by locale. Use an array if using more than one sheet for a locale. Example:
@@ -82,6 +82,6 @@ Lang::get('app.foo'); // returns "Hello!"
 ```
 
 ## Generate your strings
-Each time you need to generate your strings just visit the specified `strings_route` in your configuration. For example: `http://my-app.com/lazy/build-copy`
+Each time you need to generate your strings just visit the specified `strings-route` in your configuration. For example: `http://my-app.com/lazy/build-copy`
 
 You can also use the included artisan command `php artisan lazy:deploy`. It will do exactly the same. This is perfect when you're deploying your application with Forge.

@@ -10,7 +10,7 @@
 |
 */
 
-$routeName = (is_array($this->app['lazy-strings']->getRoute())) ? 'lazy/build-copy' : $this->app['lazy-strings']->getRoute();
+$routeName = $this->app['lazy-strings']->getRoute();
 
 Route::get($routeName, function () {
     $lazyStrings = $this->app['lazy-strings'];
@@ -18,8 +18,8 @@ Route::get($routeName, function () {
 
     $metadata = $lazyStrings->getMetadata();
 
-    $viewData['refreshed_by'] = $metadata['refreshed_by'];
-    $viewData['refreshed_on'] = $metadata['refreshed_on'];
+    $viewData['refreshedBy'] = $metadata['refreshedBy'];
+    $viewData['refreshedOn'] = $metadata['refreshedOn'];
 
     return View::make('lazy-strings::lazy', $viewData);
 });
