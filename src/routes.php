@@ -18,8 +18,8 @@ Route::get($routeName, function () {
 
     $metadata = $lazyStrings->getMetadata();
 
-    $viewData['refreshed_by'] = $metadata['refreshed_by'];
-    $viewData['refreshed_on'] = $metadata['refreshed_on'];
+    $viewData['refreshedBy'] = $metadata['refreshedBy'];
+    $viewData['refreshedOn'] = $metadata['refreshedOn'];
 
     return View::make('lazy-strings::lazy', $viewData);
 });
