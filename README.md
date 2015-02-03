@@ -85,3 +85,6 @@ Lang::get('app.foo'); // returns "Hello!"
 Each time you need to generate your strings just visit the specified `strings-route` in your configuration. For example: `http://my-app.com/lazy/build-copy`
 
 You can also use the included artisan command `php artisan lazy:deploy`. It will do exactly the same. This is perfect when you're deploying your application with Forge.
+
+## Still using Laravel 4?
+Refer to the [laravel-4](https://github.com/Nobox/Lazy-Strings/tree/laravel-4) branch.
