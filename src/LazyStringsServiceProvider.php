@@ -18,11 +18,13 @@ class LazyStringsServiceProvider extends ServiceProvider
         $views = __DIR__ . '/../views';
         $config = __DIR__ . '/../config/lazy-strings.php';
         $routes = __DIR__ . '/routes.php';
+        $public = __DIR__ . '/../public';
 
         $this->loadViewsFrom($views, 'lazy-strings');
 
         $this->publishes([
             $config => config_path('lazy-strings.php'),
+            $public => base_path('public/vendor/nobox/lazy-strings'),
         ]);
 
         include $routes;
