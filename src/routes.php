@@ -10,7 +10,7 @@
 |
 */
 
-$routeName = (is_array($this->app['lazy-strings']->getRoute())) ? 'lazy/build-copy' : $this->app['lazy-strings']->getRoute();
+$routeName = $this->app['lazy-strings']->getRoute();
 
 Route::get($routeName, function () {
     $lazyStrings = $this->app['lazy-strings'];
