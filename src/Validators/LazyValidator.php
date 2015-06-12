@@ -10,7 +10,7 @@ class LazyValidator
      * @param string $url Url of google doc
      * @return boolean
      **/
-    public static function validateDocUrl($url)
+    public function validateDocUrl($url)
     {
         $pattern = '/http:\/\/docs\.google\.com\/spreadsheets\/d\/.*\/export\?format=csv/';
 
@@ -27,7 +27,7 @@ class LazyValidator
      * @param array $sheets The sheets to validate
      * @return boolean
      **/
-    public static function validateSheets($sheets)
+    public function validateSheets($sheets)
     {
         if (count($sheets) === 0) {
             throw new Exception('No sheets were provided.');
