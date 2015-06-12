@@ -1,4 +1,4 @@
-<?php namespace Nobox\Tests\LazyStrings;
+<?php namespace Nobox\LazyStrings\Tests;
 
 use Nobox\LazyStrings\LazyStrings;
 use Illuminate\Filesystem\Filesystem;

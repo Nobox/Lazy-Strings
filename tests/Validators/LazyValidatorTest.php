@@ -1,4 +1,4 @@
-<?php namespace Nobox\Tests\LazyStrings\Validators;
+<?php namespace Nobox\LazyStrings\Tests\Validators;
 
 use Nobox\LazyStrings\Validators\LazyValidator;
 use Orchestra\Testbench\TestCase;
