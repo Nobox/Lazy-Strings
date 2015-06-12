@@ -11,59 +11,59 @@ class LazyStrings
 {
 
     /**
-     * Google doc url
+     * Google doc url.
      *
      * @var string
-     **/
+     */
     private $csvUrl;
 
     /**
-     * Tabs of doc spreadsheet
+     * Tabs of doc spreadsheet.
      *
      * @var array
-     **/
+     */
     private $sheets;
 
     /**
-     * Folder where the JSON strings will be stored
+     * Folder where the JSON strings will be stored.
      *
      * @var string
-     **/
+     */
     private $targetFolder;
 
     /**
-     * Strings generation route
+     * Strings generation route.
      *
      * @var string
-     **/
+     */
     private $route;
 
     /**
-     * Path to locale folder
+     * Path to locale folder.
      *
      * @var string
-     **/
+     */
     private $localePath;
 
     /**
      * Filename for the generated language file.
      *
      * @var string
-     **/
+     */
     private $languageFilename = 'app';
 
     /**
-     * Some basic data when strings are generated
+     * Some basic data when strings are generated.
      *
      * @var array
-     **/
+     */
     private $metadata = array();
 
     /**
-     * Filesystem instance
+     * Filesystem implementation.
      *
-     * @var Filesystem
-     **/
+     * @var Illuminate\Filesystem\Filesystem
+     */
     private $file;
 
     /**
@@ -81,11 +81,14 @@ class LazyStrings
     private $validator;
 
     /**
-     * Setting values from config files
-     * Initial setup
+     * Initial setup. Setting values from config files.
+     *
+     * @param Illuminate\Filesystem\Filesystem $file Filesystem implementation.
+     * @param Nobox\LazyStrings\Validators\LazyValidator $validator Lazy validator.
+     * @param Nobox\LazyStrings\Helpers\Str $str String helper.
      *
      * @return void
-     **/
+     */
     public function __construct(Filesystem $file, LazyValidator $validator, Str $str)
     {
         $this->csvUrl = Config::get('lazy-strings.csv-url');
@@ -103,11 +106,11 @@ class LazyStrings
     }
 
     /**
-     * Generates the copy from the sheets
-     * Language files and JSON for storage
+     * Generates the copy from the sheets.
+     * Language files and JSON for storage.
      *
      * @return array
-     **/
+     */
     public function generate()
     {
         $strings = array();
@@ -140,11 +143,12 @@ class LazyStrings
     }
 
     /**
-     * Parse provided csv document
+     * Parse provided csv document.
      *
-     * @param string $csvUrl Url of google doc
+     * @param string $csvUrl Url of google doc.
+     *
      * @return array
-     **/
+     */
     private function parse($csvUrl)
     {
         $fileOpen = fopen($csvUrl, 'r');
@@ -169,12 +173,13 @@ class LazyStrings
     }
 
     /**
-     * Append sheet array by locale
-     * If array is provided append the sheets to the same locale
+     * Append sheet array by locale.
+     * If array is provided append the sheets to the same locale.
      *
-     * @param string/array $csvId Id of csv doc
+     * @param string/array $csvId Id of csv doc.
+     *
      * @return array
-     **/
+     */
     private function localize($csvId)
     {
         $strings = array();
@@ -198,8 +203,9 @@ class LazyStrings
      * @param array $strings Parsed strings
      * @param string $folder Folder to store strings
      * @param string $file Strings filename
+     *
      * @return void
-     **/
+     */
     private function backup($strings, $folder, $file)
     {
         $stringsPath = storage_path() . '/' . $folder;
@@ -216,9 +222,10 @@ class LazyStrings
      * Create the specified directory.
      * Check if it exists first.
      *
-     * @param string $path The folder path
+     * @param string $path The folder path.
+     *
      * @return void
-     **/
+     */
     private function createDirectory($path)
     {
         if (!$this->file->exists($path)) {
@@ -227,52 +234,54 @@ class LazyStrings
     }
 
     /**
-     * Get the tabs of doc spreadsheet
+     * Get the tabs of doc spreadsheet.
      *
      * @return array
-     **/
+     */
     public function getSheets()
     {
         return $this->sheets;
     }
 
     /**
-     * Get the strings generation route name
+     * Get the strings generation route name.
      *
      * @return string
-     **/
+     */
     public function getRoute()
     {
         return $this->route;
     }
 
     /**
-     * Get string generation metadata
+     * Get string generation metadata.
      *
      * @return array
-     **/
+     */
     public function getMetadata()
     {
         return $this->metadata;
     }
 
     /**
-     * Set the google doc url
+     * Set the google doc url.
      *
-     * @param string $url The google doc url
+     * @param string $url The google doc url.
+     *
      * @return void
-     **/
+     */
     public function setCsvUrl($url)
     {
         $this->csvUrl = $url;
     }
 
     /**
-     * Set the tabs of doc spreadsheet
+     * Set the tabs of doc spreadsheet.
      *
-     * @param array $sheets The array of sheets id's
+     * @param array $sheets The array of sheets id's.
+     *
      * @return void
-     **/
+     */
     public function setSheets($sheets)
     {
         $this->sheets = $sheets;
