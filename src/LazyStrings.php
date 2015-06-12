@@ -57,7 +57,7 @@ class LazyStrings
      *
      * @var array
      */
-    private $metadata = array();
+    private $metadata = [];
 
     /**
      * Filesystem implementation.
@@ -113,7 +113,7 @@ class LazyStrings
      */
     public function generate()
     {
-        $strings = array();
+        $strings = [];
 
         // validate doc url and sheets
         if (!$this->validator->validateDocUrl($this->csvUrl)) {
@@ -152,7 +152,7 @@ class LazyStrings
     private function parse($csvUrl)
     {
         $fileOpen = fopen($csvUrl, 'r');
-        $strings = array();
+        $strings = [];
 
         if ($fileOpen !== false) {
             while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
@@ -182,7 +182,7 @@ class LazyStrings
      */
     private function localize($csvId)
     {
-        $strings = array();
+        $strings = [];
         $urlPart = '&single=true&gid=';
 
         if (is_array($csvId)) {

@@ -55,7 +55,7 @@ class LazyDeployCommand extends Command
      */
     protected function getArguments()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -65,6 +65,6 @@ class LazyDeployCommand extends Command
      */
     protected function getOptions()
     {
-        return array();
+        return [];
     }
 }
