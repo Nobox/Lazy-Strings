@@ -1,12 +1,11 @@
 <?php namespace Nobox\LazyStrings;
 
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Filesystem\Filesystem;
-
-use Nobox\LazyStrings\Validators\LazyValidator;
-
 use Exception;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
+use Nobox\LazyStrings\Helpers\Str;
+use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyStrings
 {
@@ -68,12 +67,26 @@ class LazyStrings
     private $file;
 
     /**
+     * String helper.
+     *
+     * @var Nobox\LazyStrings\Helpers\Str
+     */
+    private $str;
+
+    /**
+     * Lazy validator.
+     *
+     * @var Nobox\LazyStrings\Validators\LazyValidator
+     */
+    private $validator;
+
+    /**
      * Setting values from config files
      * Initial setup
      *
      * @return void
      **/
-    public function __construct(Filesystem $file)
+    public function __construct(Filesystem $file, LazyValidator $validator, Str $str)
     {
         $this->csvUrl = Config::get('lazy-strings.csv-url');
         $this->sheets = Config::get('lazy-strings.sheets');
@@ -81,6 +94,8 @@ class LazyStrings
         $this->route = Config::get('lazy-strings.strings-route');
 
         $this->file = $file;
+        $this->str = $str;
+        $this->validator = $validator;
         $this->localePath = base_path() . '/resources/lang';
 
         $this->metadata['refreshedBy'] = Request::server('DOCUMENT_ROOT');
@@ -98,11 +113,11 @@ class LazyStrings
         $strings = array();
 
         // validate doc url and sheets
-        if (!LazyValidator::validateDocUrl($this->csvUrl)) {
+        if (!$this->validator->validateDocUrl($this->csvUrl)) {
             throw new Exception('Provided doc url is not valid.');
         }
 
-        LazyValidator::validateSheets($this->sheets);
+        $this->validator->validateSheets($this->sheets);
 
         foreach ($this->sheets as $locale => $csvId) {
             // create locale directories (if any)
@@ -140,7 +155,7 @@ class LazyStrings
                 if ($csvFile[0] != 'id') {
                     foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
-                            $lineId = LazyValidator::strip($csvFile[0]);
+                            $lineId = $this->str->strip($csvFile[0]);
                             $strings[$lineId] = $csvRow;
                         }
                     }

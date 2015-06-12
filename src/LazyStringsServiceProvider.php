@@ -1,9 +1,10 @@
 <?php namespace Nobox\LazyStrings;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Filesystem\Filesystem;
-
+use Illuminate\Support\ServiceProvider;
 use Nobox\LazyStrings\Commands\LazyDeployCommand;
+use Nobox\LazyStrings\Helpers\Str;
+use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyStringsServiceProvider extends ServiceProvider
 {
@@ -39,7 +40,7 @@ class LazyStringsServiceProvider extends ServiceProvider
     {
         // add LazyStrings class to app container
         $this->app->bind('lazy-strings', function ($app) {
-            return new LazyStrings(new Filesystem);
+            return new LazyStrings(new Filesystem, new LazyValidator, new Str);
         });
 
         // register `lazy:deploy` command
