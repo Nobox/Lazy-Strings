@@ -29,6 +29,21 @@ class LazyValidatorTest extends TestCase
         $this->assertFalse($nullValidation, 'Google doc url must NOT be null!');
     }
 
+    public function testStripNewlines()
+    {
+        $newline = LazyValidator::strip("some.key.here\n");
+        $newlines = LazyValidator::strip("\nsome.key.here\n\n");
+        $normal = LazyValidator::strip("some.key.here");
+        $return = LazyValidator::strip("some.key.here\r");
+        $returns = LazyValidator::strip("\r\rsome.key.here\r");
+
+        $this->assertSame('some.key.here', $newline);
+        $this->assertSame('some.key.here', $newlines);
+        $this->assertSame('some.key.here', $normal);
+        $this->assertSame('some.key.here', $return);
+        $this->assertSame('some.key.here', $returns);
+    }
+
     /**
      * @expectedException Exception
      */

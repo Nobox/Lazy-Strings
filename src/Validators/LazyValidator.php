@@ -33,4 +33,16 @@ class LazyValidator
             throw new Exception('No sheets were provided.');
         }
     }
+
+    /**
+     * Strip newlines and returns from string.
+     *
+     * @param string $string String to strip.
+     *
+     * @return string
+     */
+    public static function strip($string)
+    {
+        return trim(preg_replace('/\s+/', ' ', $string));
+    }
 }
