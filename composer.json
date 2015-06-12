@@ -1,6 +1,7 @@
 {
     "name": "nobox/lazy-strings",
     "description": "Laravel 5 package that creates localized strings from a Google Docs Spreadsheet.",
+    "license" : "MIT",
     "keywords": ["laravel", "googledocs", "spreadsheet"],
     "homepage": "https://github.com/Nobox/Lazy-Strings",
     "authors": [
@@ -21,7 +22,6 @@
             "email": "waldemar@nobox.com"
         }
     ],
-    "license" : "MIT",
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "5.0.*",
