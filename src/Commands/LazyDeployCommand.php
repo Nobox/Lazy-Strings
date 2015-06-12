@@ -40,9 +40,11 @@ class LazyDeployCommand extends Command
      */
     public function fire()
     {
+        $lazyStrings = $this->laravel['lazy-strings'];
+
+        $this->info('Lazy Strings ' . $lazyStrings::VERSION);
         $this->info('Deploying...');
 
-        $lazyStrings = $this->laravel['lazy-strings'];
         $lazyStrings->generate();
 
         $this->info('Lazy Strings is now deployed.');
