@@ -140,7 +140,8 @@ class LazyStrings
                 if ($csvFile[0] != 'id') {
                     foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
-                            $strings[$csvFile[0]] = $csvRow;
+                            $lineId = trim(preg_replace('/\s+/', ' ', $csvFile[0]));
+                            $strings[$lineId] = $csvRow;
                         }
                     }
                 }
