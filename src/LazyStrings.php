@@ -1,79 +1,97 @@
 <?php namespace Nobox\LazyStrings;
 
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Filesystem\Filesystem;
-
-use Nobox\LazyStrings\Validators\LazyValidator;
-
 use Exception;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
+use Nobox\LazyStrings\Helpers\Str;
+use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyStrings
 {
 
+    const VERSION = '1.1.1';
+
     /**
-     * Google doc url
+     * Google doc url.
      *
      * @var string
-     **/
+     */
     private $csvUrl;
 
     /**
-     * Tabs of doc spreadsheet
+     * Tabs of doc spreadsheet.
      *
      * @var array
-     **/
+     */
     private $sheets;
 
     /**
-     * Folder where the JSON strings will be stored
+     * Folder where the JSON strings will be stored.
      *
      * @var string
-     **/
+     */
     private $targetFolder;
 
     /**
-     * Strings generation route
+     * Strings generation route.
      *
      * @var string
-     **/
+     */
     private $route;
 
     /**
-     * Path to locale folder
+     * Path to locale folder.
      *
      * @var string
-     **/
+     */
     private $localePath;
 
     /**
      * Filename for the generated language file.
      *
      * @var string
-     **/
+     */
     private $languageFilename = 'app';
 
     /**
-     * Some basic data when strings are generated
+     * Some basic data when strings are generated.
      *
      * @var array
-     **/
-    private $metadata = array();
+     */
+    private $metadata = [];
 
     /**
-     * Filesystem instance
+     * Filesystem implementation.
      *
-     * @var Filesystem
-     **/
+     * @var Illuminate\Filesystem\Filesystem
+     */
     private $file;
 
     /**
-     * Setting values from config files
-     * Initial setup
+     * String helper.
+     *
+     * @var Nobox\LazyStrings\Helpers\Str
+     */
+    private $str;
+
+    /**
+     * Lazy validator.
+     *
+     * @var Nobox\LazyStrings\Validators\LazyValidator
+     */
+    private $validator;
+
+    /**
+     * Initial setup. Setting values from config files.
+     *
+     * @param Illuminate\Filesystem\Filesystem $file Filesystem implementation.
+     * @param Nobox\LazyStrings\Validators\LazyValidator $validator Lazy validator.
+     * @param Nobox\LazyStrings\Helpers\Str $str String helper.
      *
      * @return void
-     **/
-    public function __construct(Filesystem $file)
+     */
+    public function __construct(Filesystem $file, LazyValidator $validator, Str $str)
     {
         $this->csvUrl = Config::get('lazy-strings.csv-url');
         $this->sheets = Config::get('lazy-strings.sheets');
@@ -81,6 +99,8 @@ class LazyStrings
         $this->route = Config::get('lazy-strings.strings-route');
 
         $this->file = $file;
+        $this->str = $str;
+        $this->validator = $validator;
         $this->localePath = base_path() . '/resources/lang';
 
         $this->metadata['refreshedBy'] = Request::server('DOCUMENT_ROOT');
@@ -88,21 +108,21 @@ class LazyStrings
     }
 
     /**
-     * Generates the copy from the sheets
-     * Language files and JSON for storage
+     * Generates the copy from the sheets.
+     * Language files and JSON for storage.
      *
      * @return array
-     **/
+     */
     public function generate()
     {
-        $strings = array();
+        $strings = [];
 
         // validate doc url and sheets
-        if (!LazyValidator::validateDocUrl($this->csvUrl)) {
+        if (!$this->validator->validateDocUrl($this->csvUrl)) {
             throw new Exception('Provided doc url is not valid.');
         }
 
-        LazyValidator::validateSheets($this->sheets);
+        $this->validator->validateSheets($this->sheets);
 
         foreach ($this->sheets as $locale => $csvId) {
             // create locale directories (if any)
@@ -125,22 +145,24 @@ class LazyStrings
     }
 
     /**
-     * Parse provided csv document
+     * Parse provided csv document.
      *
-     * @param string $csvUrl Url of google doc
+     * @param string $csvUrl Url of google doc.
+     *
      * @return array
-     **/
+     */
     private function parse($csvUrl)
     {
         $fileOpen = fopen($csvUrl, 'r');
-        $strings = array();
+        $strings = [];
 
         if ($fileOpen !== false) {
             while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
                 if ($csvFile[0] != 'id') {
                     foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
-                            $strings[$csvFile[0]] = $csvRow;
+                            $lineId = $this->str->strip($csvFile[0]);
+                            $strings[$lineId] = $csvRow;
                         }
                     }
                 }
@@ -153,15 +175,16 @@ class LazyStrings
     }
 
     /**
-     * Append sheet array by locale
-     * If array is provided append the sheets to the same locale
+     * Append sheet array by locale.
+     * If array is provided append the sheets to the same locale.
      *
-     * @param string/array $csvId Id of csv doc
+     * @param string/array $csvId Id of csv doc.
+     *
      * @return array
-     **/
+     */
     private function localize($csvId)
     {
-        $strings = array();
+        $strings = [];
         $urlPart = '&single=true&gid=';
 
         if (is_array($csvId)) {
@@ -182,9 +205,10 @@ class LazyStrings
      * @param array $strings Parsed strings
      * @param string $folder Folder to store strings
      * @param string $file Strings filename
+     *
      * @return void
-     **/
-    private function backup($strings, $folder, $file)
+     */
+    private function backup(array $strings, $folder, $file)
     {
         $stringsPath = storage_path() . '/' . $folder;
 
@@ -200,9 +224,10 @@ class LazyStrings
      * Create the specified directory.
      * Check if it exists first.
      *
-     * @param string $path The folder path
+     * @param string $path The folder path.
+     *
      * @return void
-     **/
+     */
     private function createDirectory($path)
     {
         if (!$this->file->exists($path)) {
@@ -211,53 +236,55 @@ class LazyStrings
     }
 
     /**
-     * Get the tabs of doc spreadsheet
+     * Get the tabs of doc spreadsheet.
      *
      * @return array
-     **/
+     */
     public function getSheets()
     {
         return $this->sheets;
     }
 
     /**
-     * Get the strings generation route name
+     * Get the strings generation route name.
      *
      * @return string
-     **/
+     */
     public function getRoute()
     {
         return $this->route;
     }
 
     /**
-     * Get string generation metadata
+     * Get string generation metadata.
      *
      * @return array
-     **/
+     */
     public function getMetadata()
     {
         return $this->metadata;
     }
 
     /**
-     * Set the google doc url
+     * Set the google doc url.
      *
-     * @param string $url The google doc url
+     * @param string $url The google doc url.
+     *
      * @return void
-     **/
+     */
     public function setCsvUrl($url)
     {
         $this->csvUrl = $url;
     }
 
     /**
-     * Set the tabs of doc spreadsheet
+     * Set the tabs of doc spreadsheet.
      *
-     * @param array $sheets The array of sheets id's
+     * @param array $sheets The array of sheets id's.
+     *
      * @return void
-     **/
-    public function setSheets($sheets)
+     */
+    public function setSheets(array $sheets)
     {
         $this->sheets = $sheets;
     }

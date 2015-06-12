@@ -18,6 +18,7 @@ Route::get($routeName, function () {
 
     $metadata = $lazyStrings->getMetadata();
 
+    $viewData['lazyVersion'] = $lazyStrings::VERSION;
     $viewData['refreshedBy'] = $metadata['refreshedBy'];
     $viewData['refreshedOn'] = $metadata['refreshedOn'];
 

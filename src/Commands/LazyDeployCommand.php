@@ -6,7 +6,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class LazyDeployCommand extends Command {
+class LazyDeployCommand extends Command
+{
 
     /**
      * The console command name.
@@ -39,9 +40,11 @@ class LazyDeployCommand extends Command {
      */
     public function fire()
     {
+        $lazyStrings = $this->laravel['lazy-strings'];
+
+        $this->info('Lazy Strings ' . $lazyStrings::VERSION);
         $this->info('Deploying...');
 
-        $lazyStrings = $this->laravel['lazy-strings'];
         $lazyStrings->generate();
 
         $this->info('Lazy Strings is now deployed.');
@@ -54,7 +57,7 @@ class LazyDeployCommand extends Command {
      */
     protected function getArguments()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -64,7 +67,6 @@ class LazyDeployCommand extends Command {
      */
     protected function getOptions()
     {
-        return array();
+        return [];
     }
-
 }
