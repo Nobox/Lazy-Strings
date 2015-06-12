@@ -206,7 +206,7 @@ class LazyStrings
      *
      * @return void
      */
-    private function backup($strings, $folder, $file)
+    private function backup(array $strings, $folder, $file)
     {
         $stringsPath = storage_path() . '/' . $folder;
 
@@ -282,7 +282,7 @@ class LazyStrings
      *
      * @return void
      */
-    public function setSheets($sheets)
+    public function setSheets(array $sheets)
     {
         $this->sheets = $sheets;
     }

@@ -29,7 +29,7 @@ class LazyValidator
      *
      * @return boolean
      */
-    public function validateSheets($sheets)
+    public function validateSheets(array $sheets)
     {
         if (count($sheets) === 0) {
             throw new Exception('No sheets were provided.');
