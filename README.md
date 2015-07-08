@@ -18,6 +18,15 @@ Run the following composer command to install Lazy Strings.
 composer update
 ```
 
+## Notes on Laravel versions
+If you're using Laravel `5.0` you should use version `v1.1.*`. This is the last version that supports Laravel `5.0`
+
+```json
+"require": {
+  "nobox/lazy-strings": "1.1.*"
+}
+```
+
 ## Register Lazy Strings
 Register Lazy Strings service provider in the `providers` array located in `config/app.php`
 ```php
