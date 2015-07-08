@@ -1,5 +1,9 @@
 # Changelog
 
+#### v1.2.0 `2015-07-08`
+- `Added`
+    - Support for Laravel `5.1.*`
+
 #### v1.1.1 `2015-06-12`
 - `Fixed`
     - Newlines are stripped from string id's. See [#5](https://github.com/Nobox/Lazy-Strings/issues/5)
