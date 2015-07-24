@@ -1,4 +1,6 @@
-<?php namespace Nobox\LazyStrings\Validators;
+<?php
+
+namespace Nobox\LazyStrings\Validators;
 
 use Exception;
 

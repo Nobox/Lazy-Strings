@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Lazy Strings</title>
+        <title>Lazy Strings v{{ $lazyVersion }}</title>
 
         <!-- Bootstrap core CSS -->
         <link href="{{ asset('vendor/nobox/lazy-strings/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -30,7 +30,7 @@
             <div class="site-wrapper-inner">
                 <div class="cover-container">
                     <div class="inner cover">
-                        <h1 class="cover-heading">LazyStrings {{ $lazyVersion }}</h1>
+                        <h1 class="cover-heading">LazyStrings v{{ $lazyVersion }}</h1>
                         <p class="lead">Strings have been generated successfully!</p>
                         <p>Refreshed by: {{ $refreshedBy }}</p>
                         <p>Refreshed on: {{ $refreshedOn }}</p>

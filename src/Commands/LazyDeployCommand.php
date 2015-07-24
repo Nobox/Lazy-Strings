@@ -1,4 +1,6 @@
-<?php namespace Nobox\LazyStrings\Commands;
+<?php
+
+namespace Nobox\LazyStrings\Commands;
 
 use Nobox\LazyStrings\LazyStrings;
 
@@ -42,7 +44,7 @@ class LazyDeployCommand extends Command
     {
         $lazyStrings = $this->laravel['lazy-strings'];
 
-        $this->info('Lazy Strings ' . $lazyStrings::VERSION);
+        $this->info('Lazy Strings v' . $lazyStrings::VERSION);
         $this->info('Deploying...');
 
         $lazyStrings->generate();
