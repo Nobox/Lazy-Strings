@@ -1,5 +1,10 @@
 # Changelog
 
+#### v2.0.0 `2015-07-24`
+- `Change`
+    - Default build route will always be under the `lazy` prefix.
+    - Browser deployment is now using a controller. This will enable route caching.
+
 #### v1.2.0 `2015-07-08`
 - `Added`
     - Support for Laravel `5.1.*`
