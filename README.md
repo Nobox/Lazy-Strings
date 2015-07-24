@@ -7,15 +7,8 @@ Laravel 5 package that creates localized strings from a Google Docs Spreadsheet.
 ## Installation
 Add Lazy Strings to your composer.json file.
 
-```json
-"require": {
-  "nobox/lazy-strings": "dev-master"
-}
-```
-
-Run the following composer command to install Lazy Strings.
 ```bash
-composer update
+composer require nobox/lazy-strings
 ```
 
 ## Notes on Laravel versions
@@ -30,11 +23,9 @@ If you're using Laravel `5.0` you should use version `v1.1.*`. This is the last 
 ## Register Lazy Strings
 Register Lazy Strings service provider in the `providers` array located in `config/app.php`
 ```php
-'providers' => array(
-    // ...
-
-    'Nobox\LazyStrings\LazyStringsServiceProvider'
-)
+'providers' => [
+    Nobox\LazyStrings\LazyStringsServiceProvider::class
+]
 ```
 
 ## Publish configuration and assets
@@ -63,11 +54,11 @@ Configuration is pretty simple, each configuration item is described below.
 
 - `sheets` Here you'll specify all the sheets in your Google doc (if it's more than one) with their id, each separated by locale. Use an array if using more than one sheet for a locale. Example:
 ```php
-'sheets' => array(
-    'en' => array(0, 1626663029),
+'sheets' => [
+    'en' => [0, 1626663029],
     'es' => 1329731586,
     'pt' => 1443604037
-)
+]
 ```
 You can take the id from the spreadsheet using the `gid` variable from your Google doc url. For example, in this spreadsheet: https://docs.google.com/a/nobox.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/edit#gid=1626663029 the id is `1626663029`.
 
@@ -93,7 +84,7 @@ Lang::get('app.foo'); // returns "Hello!"
 ## Generate your strings
 Each time you need to generate your strings just visit the specified `strings-route` in your configuration. The route will always be under the `lazy` prefix. For example: `http://my-app.com/lazy/build-copy`
 
-You can also use the included artisan command `php artisan lazy:deploy`. It will do exactly the same. This is perfect when you're deploying your application with Forge.
+You can also use the included artisan command `php artisan lazy:deploy`. It will do exactly the same. This is perfect when you're deploying your application with Forge or Envoyer.
 
 ## Still using Laravel 4?
 Refer to the [laravel-4](https://github.com/Nobox/Lazy-Strings/tree/laravel-4) branch.
