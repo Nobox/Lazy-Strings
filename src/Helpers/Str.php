@@ -1,4 +1,6 @@
-<?php namespace Nobox\LazyStrings\Helpers;
+<?php
+
+namespace Nobox\LazyStrings\Helpers;
 
 class Str
 {

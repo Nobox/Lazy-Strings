@@ -1,4 +1,6 @@
-<?php namespace Nobox\LazyStrings\Commands;
+<?php
+
+namespace Nobox\LazyStrings\Commands;
 
 use Nobox\LazyStrings\LazyStrings;
 

@@ -1,4 +1,6 @@
-<?php namespace Nobox\LazyStrings;
+<?php
+
+namespace Nobox\LazyStrings;
 
 use Exception;
 use Illuminate\Filesystem\Filesystem;
