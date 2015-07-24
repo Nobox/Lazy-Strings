@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Lazy Strings</title>
+        <title>Lazy Strings v{{ $lazyVersion }}</title>
 
         <!-- Bootstrap core CSS -->
         <link href="{{ asset('vendor/nobox/lazy-strings/css/bootstrap.min.css') }}" rel="stylesheet">
