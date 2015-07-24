@@ -46,6 +46,6 @@ return array(
     |
     */
 
-    'strings-route' => 'lazy/build-copy'
+    'strings-route' => 'build-copy'
 
 );
