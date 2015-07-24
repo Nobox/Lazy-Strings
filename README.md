@@ -56,9 +56,9 @@ Configuration is pretty simple, each configuration item is described below.
 'target-folder' => 'lazy-strings'
 ```
 
-- `strings-route` This is the route that will be used to generate the strings. Visit `http://my-app.com/lazy/build-copy` and your strings will be updated. By default is `lazy/build-copy`.
+- `strings-route` This is the route that will be used to generate the strings. Visit `http://my-app.com/lazy/build-copy` and your strings will be updated. By default is `build-copy`. The route will always be under the `lazy` prefix.
 ```php
-'strings-route' => 'lazy/build-copy'
+'strings-route' => 'build-copy'
 ```
 
 - `sheets` Here you'll specify all the sheets in your Google doc (if it's more than one) with their id, each separated by locale. Use an array if using more than one sheet for a locale. Example:
@@ -91,7 +91,7 @@ Lang::get('app.foo'); // returns "Hello!"
 ```
 
 ## Generate your strings
-Each time you need to generate your strings just visit the specified `strings-route` in your configuration. For example: `http://my-app.com/lazy/build-copy`
+Each time you need to generate your strings just visit the specified `strings-route` in your configuration. The route will always be under the `lazy` prefix. For example: `http://my-app.com/lazy/build-copy`
 
 You can also use the included artisan command `php artisan lazy:deploy`. It will do exactly the same. This is perfect when you're deploying your application with Forge.
 
