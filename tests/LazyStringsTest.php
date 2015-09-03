@@ -2,10 +2,12 @@
 
 namespace Nobox\LazyStrings\Tests;
 
-use Nobox\LazyStrings\LazyStrings;
 use Illuminate\Filesystem\Filesystem;
-use Orchestra\Testbench\TestCase;
 use Mockery;
+use Nobox\LazyStrings\Helpers\Str;
+use Nobox\LazyStrings\LazyStrings;
+use Nobox\LazyStrings\Validators\LazyValidator;
+use Orchestra\Testbench\TestCase;
 
 class LazyStringsTest extends TestCase
 {
@@ -19,8 +21,8 @@ class LazyStringsTest extends TestCase
         parent::setUp();
 
         $this->file = Mockery::mock('Illuminate\Filesystem\Filesystem');
-        $this->validator = Mockery::mock('Nobox\LazyStrings\Validators\LazyValidator');
-        $this->str = Mockery::mock('Nobox\LazyStrings\Helpers\Str');
+        $this->validator = new LazyValidator;
+        $this->str = new Str;
         $this->lazyStrings = new LazyStrings($this->file, $this->validator, $this->str);
     }
 
@@ -34,22 +36,16 @@ class LazyStringsTest extends TestCase
         return ['Nobox\LazyStrings\LazyStringsServiceProvider'];
     }
 
-    public function testGeneratedStrings()
+    public function testStringsAreGeneratedFromGoogleDoc()
     {
         $url = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
 
-        $this->file->shouldReceive('exists')->atLeast()->times(1);
-        $this->file->shouldReceive('makeDirectory')->atLeast()->times(1);
-        $this->file->shouldReceive('put')->atLeast()->times(1);
-        $this->validator->shouldReceive('validateDocUrl')->atLeast()->times(1)
-                        ->with($url)->andReturn(true)->getMock();
-        $this->validator->shouldReceive('validateSheets')->once()->with(array('en' => 0))
-                        ->andReturnNull()->getMock();
-        $this->str->shouldReceive('strip')->atLeast()->times(1)
-                        ->andReturn('foo')->getMock();
+        $this->file->shouldReceive('exists')->twice()->andReturn(false);
+        $this->file->shouldReceive('makeDirectory')->twice();
+        $this->file->shouldReceive('put')->twice();
 
         $this->lazyStrings->setCsvUrl($url);
-        $this->lazyStrings->setSheets(array('en' => 0));
+        $this->lazyStrings->setSheets(['en' => 0]);
 
         $generated = $this->lazyStrings->generate();
 
