@@ -12,18 +12,19 @@ use Orchestra\Testbench\TestCase;
 class LazyStringsTest extends TestCase
 {
     protected $lazyStrings;
-    protected $file;
+    protected $filesystem;
     protected $validator;
     protected $str;
+    protected $url = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->file = Mockery::mock('Illuminate\Filesystem\Filesystem');
+        $this->filesystem = Mockery::mock('Illuminate\Filesystem\Filesystem');
         $this->validator = new LazyValidator;
         $this->str = new Str;
-        $this->lazyStrings = new LazyStrings($this->file, $this->validator, $this->str);
+        $this->lazyStrings = new LazyStrings($this->filesystem, $this->validator, $this->str);
     }
 
     public function tearDown()
@@ -38,18 +39,88 @@ class LazyStringsTest extends TestCase
 
     public function testStringsAreGeneratedFromGoogleDoc()
     {
-        $url = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
+        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
+        $this->filesystem->shouldReceive('makeDirectory')->times(6);
+        $this->filesystem->shouldReceive('put')->times(6);
 
-        $this->file->shouldReceive('exists')->twice()->andReturn(false);
-        $this->file->shouldReceive('makeDirectory')->twice();
-        $this->file->shouldReceive('put')->twice();
+        $this->lazyStrings->setCsvUrl($this->url);
+        $this->lazyStrings->setSheets([
+            'en' => 0,
+            'es' => 1329731586,
+            'pt' => 1443604037,
+        ]);
 
-        $this->lazyStrings->setCsvUrl($url);
-        $this->lazyStrings->setSheets(['en' => 0]);
+        $expectedStrings = [
+            'en' => [
+                'foo' => 'Hello!',
+                'lazy' => 'LazyStrings',
+                'laravel' => 'PHP Framework',
+                'something.else.here' => 'Yeah',
+            ],
 
-        $generated = $this->lazyStrings->generate();
+            'es' => [
+                'foo' => 'bar - es',
+                'lazy' => 'LazyStrings (ES)',
+                'laravel' => 'PHP Framework (ES)',
+            ],
 
-        $this->assertArrayHasKey('en', $generated, 'Strings array not parsed correctly.');
-        $this->assertArrayHasKey('foo', $generated['en'], 'Strings array not parsed correctly.');
+            'pt' => [
+                'foo' => 'bar - pt',
+                'lazy' => 'LazyStrings (PT)',
+                'laravel' => 'PHP Framework (PT)',
+            ],
+        ];
+
+        $strings = $this->lazyStrings->generate();
+
+        $this->assertSame($strings, $expectedStrings);
+        $this->assertArrayHasKey('en', $strings);
+        $this->assertArrayHasKey('es', $strings);
+        $this->assertArrayHasKey('pt', $strings);
+        $this->assertArrayHasKey('foo', $strings['en']);
+        $this->assertArrayHasKey('lazy', $strings['en']);
+        $this->assertArrayHasKey('laravel', $strings['en']);
+        $this->assertArrayHasKey('something.else.here', $strings['en']);
+        $this->assertArrayHasKey('foo', $strings['es']);
+        $this->assertArrayHasKey('lazy', $strings['es']);
+        $this->assertArrayHasKey('laravel', $strings['es']);
+        $this->assertArrayHasKey('foo', $strings['pt']);
+        $this->assertArrayHasKey('lazy', $strings['pt']);
+        $this->assertArrayHasKey('laravel', $strings['pt']);
+    }
+
+    public function testStringsAreGeneratedWithAppendedSheet()
+    {
+        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
+        $this->filesystem->shouldReceive('makeDirectory')->times(6);
+        $this->filesystem->shouldReceive('put')->times(6);
+
+        $this->lazyStrings->setCsvUrl($this->url);
+        $this->lazyStrings->setSheets([
+            'en' => [0, 1626663029],
+            'es' => 1329731586,
+            'pt' => 1443604037,
+        ]);
+
+        $expectedStrings = [
+            'en' => [
+                'foo' => 'Hello!',
+                'lazy' => 'LazyStrings',
+                'laravel' => 'PHP Framework',
+                'something.else.here' => 'Yeah',
+                'another.thing' => 'extra value in EN',
+                'another.extra-thing' => 'This is an extra thing',
+                'another.in-english' => 'Another on in English',
+            ]
+        ];
+
+        $strings = $this->lazyStrings->generate();
+
+        $this->assertSame($strings['en'], $expectedStrings['en']);
+        $this->assertArrayHasKey('foo', $strings['en']);
+        $this->assertArrayHasKey('lazy', $strings['en']);
+        $this->assertArrayHasKey('another.thing', $strings['en']);
+        $this->assertArrayHasKey('another.extra-thing', $strings['en']);
+        $this->assertArrayHasKey('another.in-english', $strings['en']);
     }
 }
