@@ -160,7 +160,7 @@ class LazyStrings
 
         if ($fileOpen !== false) {
             while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
-                if ($csvFile[0] != 'id') {
+                if ($csvFile[0] !== 'id') {
                     foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
                             $lineId = $this->str->strip($csvFile[0]);
