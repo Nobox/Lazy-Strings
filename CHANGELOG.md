@@ -1,5 +1,10 @@
 # Changelog
 
+#### v2.0.1 `2015-09-03`
+- `Fixed`
+    - Force first and second column values to be the only ones used. See [#6](https://github.com/Nobox/Lazy-Strings/issues/6) for more details.
+    - Improved and added more tests.
+
 #### v2.0.0 `2015-07-24`
 - `Change`
     - Default build route will always be under the `lazy` prefix.

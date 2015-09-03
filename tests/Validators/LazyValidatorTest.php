@@ -45,6 +45,6 @@ class LazyValidatorTest extends TestCase
      */
     public function testNoSheetsProvidedExceptionIsThrown()
     {
-        $this->validator->validateSheets(array());
+        $this->validator->validateSheets([]);
     }
 }

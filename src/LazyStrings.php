@@ -12,7 +12,7 @@ use Nobox\LazyStrings\Validators\LazyValidator;
 class LazyStrings
 {
 
-    const VERSION = '2.0.0';
+    const VERSION = '2.0.1';
 
     /**
      * Google doc url.
@@ -160,11 +160,11 @@ class LazyStrings
 
         if ($fileOpen !== false) {
             while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
-                if ($csvFile[0] != 'id') {
+                if ($csvFile[0] !== 'id') {
                     foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
                             $lineId = $this->str->strip($csvFile[0]);
-                            $strings[$lineId] = $csvRow;
+                            $strings[$lineId] = $csvFile[1];
                         }
                     }
                 }
