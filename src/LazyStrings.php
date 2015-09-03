@@ -164,7 +164,7 @@ class LazyStrings
                     foreach ($csvFile as $csvRow) {
                         if ($csvRow) {
                             $lineId = $this->str->strip($csvFile[0]);
-                            $strings[$lineId] = $csvRow;
+                            $strings[$lineId] = $csvFile[1];
                         }
                     }
                 }
