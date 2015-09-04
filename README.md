@@ -73,7 +73,7 @@ Lazy Strings uses an `id => value` convention to access the copy, it generates a
 
 In this doc you can access the first row in your view like this:
 ```php
-trans('lazy.foo') // returns "Hello!"
+trans('lazy.foo'); // returns "Hello!"
 ```
 
 Or in your controller like this:
