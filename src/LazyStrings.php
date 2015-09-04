@@ -12,7 +12,7 @@ use Nobox\LazyStrings\Validators\LazyValidator;
 class LazyStrings
 {
 
-    const VERSION = '2.0.1';
+    const VERSION = '3.0.0';
 
     /**
      * Google doc url.
@@ -54,7 +54,7 @@ class LazyStrings
      *
      * @var string
      */
-    private $languageFilename = 'app';
+    private $languageFilename = 'lazy';
 
     /**
      * Some basic data when strings are generated.

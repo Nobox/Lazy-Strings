@@ -1,5 +1,9 @@
 # Changelog
 
+#### v3.0.0 `2015-09-04`
+- `Change`
+    - Namespace on which strings are stored has been changed. Strings are now accessible via `trans('lazy.foo');`
+
 #### v2.0.1 `2015-09-03`
 - `Fixed`
     - Force first and second column values to be the only ones used. See [#6](https://github.com/Nobox/Lazy-Strings/issues/6) for more details.
