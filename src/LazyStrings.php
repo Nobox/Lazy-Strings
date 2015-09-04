@@ -54,7 +54,7 @@ class LazyStrings
      *
      * @var string
      */
-    private $languageFilename = 'app';
+    private $languageFilename = 'lazy';
 
     /**
      * Some basic data when strings are generated.
