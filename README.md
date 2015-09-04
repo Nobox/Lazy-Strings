@@ -16,7 +16,7 @@ If you're using Laravel `5.0` you should use version `v1.1.*`. This is the last 
 
 | Laravel Version     | LazyStrings Version to use    |
 | ------------------- | ----------------------------- |
-| 5.1                 | ^2.0                          |
+| 5.1                 | ^3.0                          |
 | 5.0                 | 1.1.*                         |
 | 4.0                 | dev-laravel-4                 |
 
@@ -63,7 +63,7 @@ Configuration is pretty simple, each configuration item is described below.
 You can take the id from the spreadsheet using the `gid` variable from your Google doc url. For example, in this spreadsheet: https://docs.google.com/a/nobox.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/edit#gid=1626663029 the id is `1626663029`.
 
 ## How it works
-Lazy Strings uses an `id => value` convention to access the copy, it generates an `app.php` file inside the specified language locale folder. You can see an example doc here: https://docs.google.com/a/nobox.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/edit#gid=0.
+Lazy Strings uses an `id => value` convention to access the copy, it generates an `lazy.php` file inside the specified language locale folder. You can see an example doc here: https://docs.google.com/a/nobox.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/edit#gid=0.
 
 | id            | value         |
 | ------------- | ------------- |
@@ -73,12 +73,12 @@ Lazy Strings uses an `id => value` convention to access the copy, it generates a
 
 In this doc you can access the first row in your view like this:
 ```php
-trans('app.foo') // returns "Hello!"
+trans('lazy.foo') // returns "Hello!"
 ```
 
 Or in your controller like this:
 ```php
-Lang::get('app.foo'); // returns "Hello!"
+Lang::get('lazy.foo'); // returns "Hello!"
 ```
 
 ## Generate your strings
