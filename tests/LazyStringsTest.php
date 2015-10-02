@@ -39,16 +39,14 @@ class LazyStringsTest extends TestCase
 
     public function testStringsAreGeneratedFromGoogleDoc()
     {
-        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
-        $this->filesystem->shouldReceive('makeDirectory')->times(6);
-        $this->filesystem->shouldReceive('put')->times(6);
-
         $this->lazyStrings->setCsvUrl($this->url);
         $this->lazyStrings->setSheets([
             'en' => 0,
             'es' => 1329731586,
             'pt' => 1443604037,
         ]);
+
+        $this->setUpMocks();
 
         $expectedStrings = [
             'en' => [
@@ -91,16 +89,14 @@ class LazyStringsTest extends TestCase
 
     public function testStringsAreGeneratedWithAppendedSheet()
     {
-        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
-        $this->filesystem->shouldReceive('makeDirectory')->times(6);
-        $this->filesystem->shouldReceive('put')->times(6);
-
         $this->lazyStrings->setCsvUrl($this->url);
         $this->lazyStrings->setSheets([
             'en' => [0, 1626663029],
             'es' => 1329731586,
             'pt' => 1443604037,
         ]);
+
+        $this->setUpMocks();
 
         $expectedStrings = [
             'en' => [
@@ -122,5 +118,12 @@ class LazyStringsTest extends TestCase
         $this->assertArrayHasKey('another.thing', $strings['en']);
         $this->assertArrayHasKey('another.extra-thing', $strings['en']);
         $this->assertArrayHasKey('another.in-english', $strings['en']);
+    }
+
+    protected function setUpMocks()
+    {
+        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
+        $this->filesystem->shouldReceive('makeDirectory')->times(6);
+        $this->filesystem->shouldReceive('put')->times(6);
     }
 }
