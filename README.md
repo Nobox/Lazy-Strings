@@ -16,7 +16,7 @@ If you're using Laravel `5.0` you should use version `v1.1.*`. This is the last 
 
 | Laravel Version     | LazyStrings Version to use    |
 | ------------------- | ----------------------------- |
-| 5.1                 | ^3.0                          |
+| 5.1                 | ^3.0 or ^2.0                  |
 | 5.0                 | 1.1.*                         |
 | 4.0                 | dev-laravel-4                 |
 
