@@ -4,14 +4,12 @@ namespace Nobox\LazyStrings;
 
 use Exception;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Nobox\LazyStrings\Helpers\Str;
 use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyStrings
 {
-
     const VERSION = '3.0.0';
 
     /**
@@ -95,10 +93,10 @@ class LazyStrings
      */
     public function __construct(Filesystem $file, LazyValidator $validator, Str $str)
     {
-        $this->csvUrl = Config::get('lazy-strings.csv-url');
-        $this->sheets = Config::get('lazy-strings.sheets');
-        $this->targetFolder = Config::get('lazy-strings.target-folder');
-        $this->route = Config::get('lazy-strings.strings-route');
+        $this->csvUrl = config('lazy-strings.csv-url');
+        $this->sheets = config('lazy-strings.sheets');
+        $this->targetFolder = config('lazy-strings.target-folder');
+        $this->route = config('lazy-strings.strings-route');
 
         $this->file = $file;
         $this->str = $str;
