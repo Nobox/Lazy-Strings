@@ -30,4 +30,15 @@ class StrTest extends TestCase
         $this->assertSame('some.key.here', $return);
         $this->assertSame('some.key.here', $returns);
     }
+
+    public function testStringHasDots()
+    {
+        $dotted = 'this.string.has.dots';
+        $oneDot = 'only.onedot';
+        $noDots = 'cool';
+
+        $this->assertTrue($this->str->hasDots($dotted));
+        $this->assertTrue($this->str->hasDots($oneDot));
+        $this->assertFalse($this->str->hasDots($noDots));
+    }
 }
