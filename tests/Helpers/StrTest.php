@@ -62,8 +62,32 @@ class StrTest extends TestCase
             ]
         ];
 
+        $fourDimensions = [
+            'home' => [
+                'howto' => [
+                    'wildcard' => [
+                        'title' => 'The wildcard title'
+                    ]
+                ]
+            ]
+        ];
+
+        $fiveDimensions = [
+            'about' => [
+                'projects' => [
+                    'freelance' => [
+                        'php' => [
+                            'first' => 'This is my first project'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
         $this->assertSame($oneDimension, $this->str->convertToArray('title', 'This is your page title'));
         $this->assertSame($twoDimensions, $this->str->convertToArray('tagline.cta', 'Click here'));
         $this->assertSame($threeDimensions, $this->str->convertToArray('meta.seo.description', 'This is some description'));
+        $this->assertSame($fourDimensions, $this->str->convertToArray('home.howto.wildcard.title', 'The wildcard title'));
+        $this->assertSame($fiveDimensions, $this->str->convertToArray('about.projects.freelance.php.first', 'This is my first project'));
     }
 }

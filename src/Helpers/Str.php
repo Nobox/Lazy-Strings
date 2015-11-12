@@ -31,7 +31,7 @@ class Str
         $result = [];
         $keys = explode('.', $string); // this, is, something
         $dimensions = count($keys);
-        $supportedDimensions = 3;
+        $supportedDimensions = 5;
 
         // check if dimensions is larger than the amount
         // of allowed dimensions, if so, throw an exception.
@@ -44,20 +44,28 @@ class Str
             for ($i = 1; $i < $dimensions; $i++) {
                 $emptyItem = [$keys[$i] => []];
 
-                if ($i === 1) {
+                if ($i === 1) { // two dimensions
                     $result[$keys[$i - 1]] = $emptyItem;
-                } elseif ($i === 2) {
+                } elseif ($i === 2) { // three dimensions
                     $result[$keys[$i - 2]][$keys[$i - 1]] = $emptyItem;
+                } elseif ($i === 3) { // four dimensions
+                    $result[$keys[$i - 3]][$keys[$i - 2]][$keys[$i - 1]] = $emptyItem;
+                } elseif ($i === 4) { // five dimensions
+                    $result[$keys[$i - 4]][$keys[$i - 3]][$keys[$i - 2]][$keys[$i - 1]] = $emptyItem;
                 }
             }
 
-            // append value to last item
+            // append value to last item, depending on dimension
             if ($dimensions === 1) {
                 $result[$keys[$dimensions - 1]] = $value;
             } elseif ($dimensions === 2) {
                 $result[$keys[$dimensions - 2]][$keys[$dimensions - 1]] = $value;
             } elseif ($dimensions === 3) {
                 $result[$keys[$dimensions - 3]][$keys[$dimensions - 2]][$keys[$dimensions - 1]] = $value;
+            } elseif ($dimensions === 4) {
+                $result[$keys[$dimensions - 4]][$keys[$dimensions - 3]][$keys[$dimensions - 2]][$keys[$dimensions - 1]] = $value;
+            } elseif ($dimensions === 5) {
+                $result[$keys[$dimensions - 5]][$keys[$dimensions - 4]][$keys[$dimensions - 3]][$keys[$dimensions - 2]][$keys[$dimensions - 1]] = $value;
             }
         }
 
