@@ -44,14 +44,26 @@ class StrTest extends TestCase
 
     public function testConvertDottedStringToArray()
     {
-        $expected = [
-            'this' => [
-                'is' => [
-                    'something' => 'Some value'
+        $oneDimension = [
+            'title' => 'This is your page title'
+        ];
+
+        $twoDimensions = [
+            'tagline' => [
+                'cta' => 'Click here'
+            ]
+        ];
+
+        $threeDimensions = [
+            'meta' => [
+                'seo' => [
+                    'description' => 'This is some description'
                 ]
             ]
         ];
 
-        $this->assertSame($expected, $this->str->convertToArray('this.is.something', 'Some value'));
+        $this->assertSame($oneDimension, $this->str->convertToArray('title', 'This is your page title'));
+        $this->assertSame($twoDimensions, $this->str->convertToArray('tagline.cta', 'Click here'));
+        $this->assertSame($threeDimensions, $this->str->convertToArray('meta.seo.description', 'This is some description'));
     }
 }
