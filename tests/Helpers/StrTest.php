@@ -41,4 +41,17 @@ class StrTest extends TestCase
         $this->assertTrue($this->str->hasDots($oneDot));
         $this->assertFalse($this->str->hasDots($noDots));
     }
+
+    public function testConvertDottedStringToArray()
+    {
+        $expected = [
+            'this' => [
+                'is' => [
+                    'something' => 'Some value'
+                ]
+            ]
+        ];
+
+        $this->assertSame($expected, $this->str->convertToArray('this.is.something', 'Some value'));
+    }
 }
