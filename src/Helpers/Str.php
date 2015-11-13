@@ -38,7 +38,7 @@ class Str
         // Support up to 5 dimensions? (one.two.three.four.five)
 
         if ($dimensions > 0) {
-            $result = $this->appendStringValueToLastItem(
+            $result = $this->appendValueToLastItem(
                 $this->buildDimensionalArray($keys, $dimensions),
                 $keys,
                 $dimensions,
@@ -108,7 +108,7 @@ class Str
      *
      * @return array
      */
-    private function appendStringValueToLastItem($results, $keys, $dimensions, $value)
+    private function appendValueToLastItem($results, $keys, $dimensions, $value)
     {
         if ($dimensions === 1) {
             $result[$keys[$dimensions - 1]] = $value;
