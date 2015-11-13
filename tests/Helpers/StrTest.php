@@ -90,4 +90,12 @@ class StrTest extends TestCase
         $this->assertSame($fourDimensions, $this->str->convertToArray('home.howto.wildcard.title', 'The wildcard title'));
         $this->assertSame($fiveDimensions, $this->str->convertToArray('about.projects.freelance.php.first', 'This is my first project'));
     }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testArrayHasTooManyDimensions()
+    {
+        $this->str->convertToArray('one.two.three.four.five.six', 'Hello World.');
+    }
 }

@@ -2,6 +2,8 @@
 
 namespace Nobox\LazyStrings\Helpers;
 
+use Exception;
+
 class Str
 {
 
@@ -19,7 +21,8 @@ class Str
 
     /**
      * Convert dotted string to a nested array.
-     * Append the value to the last nested array
+     * Append the value to the last nested array.
+     * Currently supporting up to 5 dimensions.
      *
      * @param string $string
      * @param string $value
@@ -29,13 +32,15 @@ class Str
     public function convertToArray($string, $value)
     {
         $result = [];
-        $keys = explode('.', $string); // this, is, something
+        $keys = explode('.', $string);
         $dimensions = count($keys);
         $supportedDimensions = 5;
 
-        // check if dimensions is larger than the amount
-        // of allowed dimensions, if so, throw an exception.
-        // Support up to 5 dimensions? (one.two.three.four.five)
+        // check if dimensions is larger than the amount of allowed dimensions
+        if ($dimensions > $supportedDimensions) {
+            $message = 'Too many dimensions. Currently supporting up to ' . $supportedDimensions . ' dimensions.';
+            throw new Exception($message);
+        }
 
         if ($dimensions > 0) {
             $result = $this->appendValueToLastItem(
