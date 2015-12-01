@@ -153,22 +153,24 @@ class LazyStrings
      */
     private function parse($csvUrl)
     {
-        $fileOpen = fopen($csvUrl, 'r');
+        $csvFile = fopen($csvUrl, 'r');
         $strings = [];
 
-        if ($fileOpen !== false) {
-            while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
-                if ($csvFile[0] !== 'id') {
-                    foreach ($csvFile as $csvRow) {
-                        if ($csvRow) {
-                            $lineId = $this->str->strip($csvFile[0]);
-                            $strings[$lineId] = $csvFile[1];
-                        }
+        if ($csvFile !== false) {
+            while (($row = fgetcsv($csvFile, 1000, ',')) !== false) {
+                if ($row[0] !== 'id') {
+                    $id = $this->str->strip($row[0]);
+                    $value = $row[1];
+
+                    if ($this->str->hasDots($id)) {
+                        $strings = array_merge_recursive($strings, $this->str->convertToArray($id, $value));
+                    } else {
+                        $strings[$id] = $value;
                     }
                 }
             }
 
-            fclose($fileOpen);
+            fclose($csvFile);
         }
 
         return $strings;
