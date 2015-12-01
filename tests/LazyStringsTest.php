@@ -122,12 +122,6 @@ class LazyStringsTest extends TestCase
             ]
         ];
 
-        $a = [
-            'another' => [
-                'thing' => 'extra value in EN'
-            ]
-        ];
-
         $strings = $this->lazyStrings->generate();
 
         $this->assertSame($strings['en'], $expectedStrings['en']);
