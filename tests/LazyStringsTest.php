@@ -53,7 +53,11 @@ class LazyStringsTest extends TestCase
                 'foo' => 'Hello!',
                 'lazy' => 'LazyStrings',
                 'laravel' => 'PHP Framework',
-                'something.else.here' => 'Yeah',
+                'something' => [
+                    'else' => [
+                        'here' => 'Yeah'
+                    ]
+                ]
             ],
 
             'es' => [
@@ -78,7 +82,9 @@ class LazyStringsTest extends TestCase
         $this->assertArrayHasKey('foo', $strings['en']);
         $this->assertArrayHasKey('lazy', $strings['en']);
         $this->assertArrayHasKey('laravel', $strings['en']);
-        $this->assertArrayHasKey('something.else.here', $strings['en']);
+        $this->assertArrayHasKey('something', $strings['en']);
+        $this->assertArrayHasKey('else', $strings['en']['something']);
+        $this->assertArrayHasKey('here', $strings['en']['something']['else']);
         $this->assertArrayHasKey('foo', $strings['es']);
         $this->assertArrayHasKey('lazy', $strings['es']);
         $this->assertArrayHasKey('laravel', $strings['es']);
@@ -103,10 +109,22 @@ class LazyStringsTest extends TestCase
                 'foo' => 'Hello!',
                 'lazy' => 'LazyStrings',
                 'laravel' => 'PHP Framework',
-                'something.else.here' => 'Yeah',
-                'another.thing' => 'extra value in EN',
-                'another.extra-thing' => 'This is an extra thing',
-                'another.in-english' => 'Another on in English',
+                'something' => [
+                    'else' => [
+                        'here' => 'Yeah'
+                    ]
+                ],
+                'another' => [
+                    'thing' => 'extra value in EN',
+                    'extra-thing' => 'This is an extra thing',
+                    'in-english' => 'Another one in English',
+                ],
+            ]
+        ];
+
+        $a = [
+            'another' => [
+                'thing' => 'extra value in EN'
             ]
         ];
 
@@ -115,9 +133,10 @@ class LazyStringsTest extends TestCase
         $this->assertSame($strings['en'], $expectedStrings['en']);
         $this->assertArrayHasKey('foo', $strings['en']);
         $this->assertArrayHasKey('lazy', $strings['en']);
-        $this->assertArrayHasKey('another.thing', $strings['en']);
-        $this->assertArrayHasKey('another.extra-thing', $strings['en']);
-        $this->assertArrayHasKey('another.in-english', $strings['en']);
+        $this->assertArrayHasKey('another', $strings['en']);
+        $this->assertArrayHasKey('thing', $strings['en']['another']);
+        $this->assertArrayHasKey('extra-thing', $strings['en']['another']);
+        $this->assertArrayHasKey('in-english', $strings['en']['another']);
     }
 
     protected function setUpMocks()
