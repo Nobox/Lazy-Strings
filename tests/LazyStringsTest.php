@@ -257,7 +257,7 @@ class LazyStringsTest extends TestCase
                 ],
                 'poll' => [
                     'question' => [
-                        'one' => [
+                        '1' => [
                             'title' => 'Title of your question',
                             'answers' => [
                                 'a' => 'First answer',
@@ -276,13 +276,13 @@ class LazyStringsTest extends TestCase
         $this->assertSame($strings['en'], $expectedStrings['en']);
         $this->assertArrayHasKey('poll', $strings['en']);
         $this->assertArrayHasKey('question', $strings['en']['poll']);
-        $this->assertArrayHasKey('one', $strings['en']['poll']['question']);
-        $this->assertArrayHasKey('title', $strings['en']['poll']['question']['one']);
-        $this->assertArrayHasKey('answers', $strings['en']['poll']['question']['one']);
-        $this->assertArrayHasKey('a', $strings['en']['poll']['question']['one']['answers']);
-        $this->assertArrayHasKey('b', $strings['en']['poll']['question']['one']['answers']);
-        $this->assertArrayHasKey('c', $strings['en']['poll']['question']['one']['answers']);
-        $this->assertArrayHasKey('d', $strings['en']['poll']['question']['one']['answers']);
+        $this->assertArrayHasKey('1', $strings['en']['poll']['question']);
+        $this->assertArrayHasKey('title', $strings['en']['poll']['question']['1']);
+        $this->assertArrayHasKey('answers', $strings['en']['poll']['question']['1']);
+        $this->assertArrayHasKey('a', $strings['en']['poll']['question']['1']['answers']);
+        $this->assertArrayHasKey('b', $strings['en']['poll']['question']['1']['answers']);
+        $this->assertArrayHasKey('c', $strings['en']['poll']['question']['1']['answers']);
+        $this->assertArrayHasKey('d', $strings['en']['poll']['question']['1']['answers']);
     }
 
     protected function setUpMocks()
