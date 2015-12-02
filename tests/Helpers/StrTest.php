@@ -91,6 +91,21 @@ class StrTest extends TestCase
         $this->assertSame($fiveDimensions, $this->str->convertToArray('about.projects.freelance.php.first', 'This is my first project'));
     }
 
+    public function testConvertDottedStringWithNumericKeysToArray()
+    {
+        $expected = [
+            'question' => [
+                '1' => [
+                    'answers' => [
+                        'a' => 'This is some answer.'
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertSame($expected, $this->str->convertToArray('question.1.answers.a', 'This is some answer.'));
+    }
+
     /**
      * @expectedException Exception
      */
