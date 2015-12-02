@@ -163,7 +163,7 @@ class LazyStrings
                     $value = $row[1];
 
                     if ($this->str->hasDots($id)) {
-                        $strings = array_merge_recursive($strings, $this->str->convertToArray($id, $value));
+                        $strings = array_replace_recursive($strings, $this->str->convertToArray($id, $value));
                     } else {
                         $strings[$id] = $value;
                     }
