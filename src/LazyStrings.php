@@ -115,12 +115,12 @@ class LazyStrings
      */
     public function generate()
     {
-        $strings = [];
-
         // validate doc url and sheets
         if (!$this->validator->validateDocUrl($this->csvUrl)) {
             throw new Exception('Provided doc url is not valid.');
         }
+
+        $strings = [];
 
         $this->validator->validateSheets($this->sheets);
 
