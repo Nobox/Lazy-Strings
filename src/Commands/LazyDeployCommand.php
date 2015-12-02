@@ -51,24 +51,4 @@ class LazyDeployCommand extends Command
 
         $this->info('Lazy Strings is now deployed.');
     }
-
-    /**
-     * Get the console command arguments.
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [];
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [];
-    }
 }

@@ -30,4 +30,87 @@ class StrTest extends TestCase
         $this->assertSame('some.key.here', $return);
         $this->assertSame('some.key.here', $returns);
     }
+
+    public function testStringHasDots()
+    {
+        $dotted = 'this.string.has.dots';
+        $oneDot = 'only.onedot';
+        $noDots = 'cool';
+
+        $this->assertTrue($this->str->hasDots($dotted));
+        $this->assertTrue($this->str->hasDots($oneDot));
+        $this->assertFalse($this->str->hasDots($noDots));
+    }
+
+    public function testConvertDottedStringToArray()
+    {
+        $oneDimension = [
+            'title' => 'This is your page title'
+        ];
+
+        $twoDimensions = [
+            'tagline' => [
+                'cta' => 'Click here'
+            ]
+        ];
+
+        $threeDimensions = [
+            'meta' => [
+                'seo' => [
+                    'description' => 'This is some description'
+                ]
+            ]
+        ];
+
+        $fourDimensions = [
+            'home' => [
+                'howto' => [
+                    'wildcard' => [
+                        'title' => 'The wildcard title'
+                    ]
+                ]
+            ]
+        ];
+
+        $fiveDimensions = [
+            'about' => [
+                'projects' => [
+                    'freelance' => [
+                        'php' => [
+                            'first' => 'This is my first project'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertSame($oneDimension, $this->str->convertToArray('title', 'This is your page title'));
+        $this->assertSame($twoDimensions, $this->str->convertToArray('tagline.cta', 'Click here'));
+        $this->assertSame($threeDimensions, $this->str->convertToArray('meta.seo.description', 'This is some description'));
+        $this->assertSame($fourDimensions, $this->str->convertToArray('home.howto.wildcard.title', 'The wildcard title'));
+        $this->assertSame($fiveDimensions, $this->str->convertToArray('about.projects.freelance.php.first', 'This is my first project'));
+    }
+
+    public function testConvertDottedStringWithNumericKeysToArray()
+    {
+        $expected = [
+            'question' => [
+                '1' => [
+                    'answers' => [
+                        'a' => 'This is some answer.'
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertSame($expected, $this->str->convertToArray('question.1.answers.a', 'This is some answer.'));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testArrayHasTooManyDimensions()
+    {
+        $this->str->convertToArray('one.two.three.four.five.six', 'Hello World.');
+    }
 }

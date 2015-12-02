@@ -4,15 +4,13 @@ namespace Nobox\LazyStrings;
 
 use Exception;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
 use Nobox\LazyStrings\Helpers\Str;
 use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyStrings
 {
-
-    const VERSION = '3.0.0';
+    const VERSION = '3.1.0';
 
     /**
      * Google doc url.
@@ -95,10 +93,10 @@ class LazyStrings
      */
     public function __construct(Filesystem $file, LazyValidator $validator, Str $str)
     {
-        $this->csvUrl = Config::get('lazy-strings.csv-url');
-        $this->sheets = Config::get('lazy-strings.sheets');
-        $this->targetFolder = Config::get('lazy-strings.target-folder');
-        $this->route = Config::get('lazy-strings.strings-route');
+        $this->csvUrl = config('lazy-strings.csv-url');
+        $this->sheets = config('lazy-strings.sheets');
+        $this->targetFolder = config('lazy-strings.target-folder');
+        $this->route = config('lazy-strings.strings-route');
 
         $this->file = $file;
         $this->str = $str;
@@ -117,14 +115,14 @@ class LazyStrings
      */
     public function generate()
     {
-        $strings = [];
-
         // validate doc url and sheets
         if (!$this->validator->validateDocUrl($this->csvUrl)) {
             throw new Exception('Provided doc url is not valid.');
         }
 
         $this->validator->validateSheets($this->sheets);
+
+        $strings = [];
 
         foreach ($this->sheets as $locale => $csvId) {
             // create locale directories (if any)
@@ -155,22 +153,24 @@ class LazyStrings
      */
     private function parse($csvUrl)
     {
-        $fileOpen = fopen($csvUrl, 'r');
+        $csvFile = fopen($csvUrl, 'r');
         $strings = [];
 
-        if ($fileOpen !== false) {
-            while (($csvFile = fgetcsv($fileOpen, 1000, ',')) !== false) {
-                if ($csvFile[0] !== 'id') {
-                    foreach ($csvFile as $csvRow) {
-                        if ($csvRow) {
-                            $lineId = $this->str->strip($csvFile[0]);
-                            $strings[$lineId] = $csvFile[1];
-                        }
+        if ($csvFile !== false) {
+            while (($row = fgetcsv($csvFile, 1000, ',')) !== false) {
+                if ($row[0] !== 'id') {
+                    $id = $this->str->strip($row[0]);
+                    $value = $row[1];
+
+                    if ($this->str->hasDots($id)) {
+                        $strings = array_replace_recursive($strings, $this->str->convertToArray($id, $value));
+                    } else {
+                        $strings[$id] = $value;
                     }
                 }
             }
 
-            fclose($fileOpen);
+            fclose($csvFile);
         }
 
         return $strings;

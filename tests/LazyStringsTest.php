@@ -39,10 +39,6 @@ class LazyStringsTest extends TestCase
 
     public function testStringsAreGeneratedFromGoogleDoc()
     {
-        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
-        $this->filesystem->shouldReceive('makeDirectory')->times(6);
-        $this->filesystem->shouldReceive('put')->times(6);
-
         $this->lazyStrings->setCsvUrl($this->url);
         $this->lazyStrings->setSheets([
             'en' => 0,
@@ -50,24 +46,127 @@ class LazyStringsTest extends TestCase
             'pt' => 1443604037,
         ]);
 
+        $this->setUpMocks();
+
         $expectedStrings = [
             'en' => [
-                'foo' => 'Hello!',
-                'lazy' => 'LazyStrings',
+                'title' => 'Your page title',
+                'tagline' => 'Your page tagline',
                 'laravel' => 'PHP Framework',
-                'something.else.here' => 'Yeah',
+                'header' => [
+                    'hero' => [
+                        'headline' => 'Hero headlines',
+                        'subject' => 'Main hero subject',
+                    ]
+                ],
+                'footer' => [
+                    'notice' => 'All rights reserved',
+                    'copyrights' => 'Copyrights copy',
+                ],
+                'home' => [
+                    'welcome' => [
+                        'tutorial' => [
+                            'title' => 'Tutorial Title',
+                            'description' => 'Tutorial Description',
+                        ],
+                        'picks' => [
+                            'title' => 'Picks Title',
+                            'description' => 'Picks Description',
+                        ],
+                    ],
+                    'social' => [
+                        'facebook' => [
+                            'title' => 'Facebook Title',
+                            'content' => 'Facebook Content',
+                            'description' => 'Facebook Description',
+                        ],
+                        'twitter' => [
+                            'title' => 'Twitter Title',
+                            'content' => 'Twitter Content',
+                            'description' => 'Twitter Description',
+                        ]
+                    ]
+                ]
             ],
 
             'es' => [
-                'foo' => 'bar - es',
-                'lazy' => 'LazyStrings (ES)',
-                'laravel' => 'PHP Framework (ES)',
+                'title' => 'Titulo de la pagina',
+                'tagline' => 'Tagline de la pagina',
+                'laravel' => 'Framework de PHP',
+                'header' => [
+                    'hero' => [
+                        'headline' => 'Headlines del hero',
+                        'subject' => 'Tema del hero',
+                    ]
+                ],
+                'footer' => [
+                    'notice' => 'Todos los derechos reservados',
+                    'copyrights' => 'Derechos de autor',
+                ],
+                'home' => [
+                    'welcome' => [
+                        'tutorial' => [
+                            'title' => 'Titulo del tutorial',
+                            'description' => 'Descripcion del tutorial',
+                        ],
+                        'picks' => [
+                            'title' => 'Titulos de la seleccion',
+                            'description' => 'Descripcion de la seleccion',
+                        ],
+                    ],
+                    'social' => [
+                        'facebook' => [
+                            'title' => 'Titulo de Facebook',
+                            'content' => 'Contenido de Facebook',
+                            'description' => 'Descripcion de Facebook',
+                        ],
+                        'twitter' => [
+                            'title' => 'Titulo de Twitter',
+                            'content' => 'Contenido de Twitter',
+                            'description' => 'Descripcion de Twitter',
+                        ]
+                    ]
+                ]
             ],
 
             'pt' => [
-                'foo' => 'bar - pt',
-                'lazy' => 'LazyStrings (PT)',
-                'laravel' => 'PHP Framework (PT)',
+                'title' => 'Titulo de la pagina',
+                'tagline' => 'Tagline de la pagina',
+                'laravel' => 'Framework de PHP',
+                'header' => [
+                    'hero' => [
+                        'headline' => 'Headlines del hero',
+                        'subject' => 'Tema del hero',
+                    ]
+                ],
+                'footer' => [
+                    'notice' => 'Todos los derechos reservados',
+                    'copyrights' => 'Derechos de autor',
+                ],
+                'home' => [
+                    'welcome' => [
+                        'tutorial' => [
+                            'title' => 'Titulo del tutorial',
+                            'description' => 'Descripcion del tutorial',
+                        ],
+                        'picks' => [
+                            'title' => 'Titulos de la seleccion',
+                            'description' => 'Descripcion de la seleccion',
+                        ],
+                    ],
+                    'social' => [
+                        'facebook' => [
+                            'title' => 'Titulo de Facebook',
+                            'content' => 'Contenido de Facebook',
+                            'description' => 'Descripcion de Facebook',
+                        ],
+                        'twitter' => [
+                            'title' => 'Titulo de Twitter',
+                            'content' => 'Contenido de Twitter',
+                            'description' => 'Descripcion de Twitter',
+                        ]
+                    ]
+                ]
             ],
         ];
 
@@ -77,24 +176,37 @@ class LazyStringsTest extends TestCase
         $this->assertArrayHasKey('en', $strings);
         $this->assertArrayHasKey('es', $strings);
         $this->assertArrayHasKey('pt', $strings);
-        $this->assertArrayHasKey('foo', $strings['en']);
-        $this->assertArrayHasKey('lazy', $strings['en']);
+        $this->assertArrayHasKey('title', $strings['en']);
+        $this->assertArrayHasKey('tagline', $strings['en']);
         $this->assertArrayHasKey('laravel', $strings['en']);
-        $this->assertArrayHasKey('something.else.here', $strings['en']);
-        $this->assertArrayHasKey('foo', $strings['es']);
-        $this->assertArrayHasKey('lazy', $strings['es']);
-        $this->assertArrayHasKey('laravel', $strings['es']);
-        $this->assertArrayHasKey('foo', $strings['pt']);
-        $this->assertArrayHasKey('lazy', $strings['pt']);
-        $this->assertArrayHasKey('laravel', $strings['pt']);
+        $this->assertArrayHasKey('header', $strings['en']);
+        $this->assertArrayHasKey('hero', $strings['en']['header']);
+        $this->assertArrayHasKey('headline', $strings['en']['header']['hero']);
+        $this->assertArrayHasKey('subject', $strings['en']['header']['hero']);
+        $this->assertArrayHasKey('footer', $strings['en']);
+        $this->assertArrayHasKey('notice', $strings['en']['footer']);
+        $this->assertArrayHasKey('copyrights', $strings['en']['footer']);
+        $this->assertArrayHasKey('home', $strings['en']);
+        $this->assertArrayHasKey('welcome', $strings['en']['home']);
+        $this->assertArrayHasKey('tutorial', $strings['en']['home']['welcome']);
+        $this->assertArrayHasKey('title', $strings['en']['home']['welcome']['tutorial']);
+        $this->assertArrayHasKey('description', $strings['en']['home']['welcome']['tutorial']);
+        $this->assertArrayHasKey('picks', $strings['en']['home']['welcome']);
+        $this->assertArrayHasKey('title', $strings['en']['home']['welcome']['picks']);
+        $this->assertArrayHasKey('description', $strings['en']['home']['welcome']['picks']);
+        $this->assertArrayHasKey('social', $strings['en']['home']);
+        $this->assertArrayHasKey('facebook', $strings['en']['home']['social']);
+        $this->assertArrayHasKey('title', $strings['en']['home']['social']['facebook']);
+        $this->assertArrayHasKey('content', $strings['en']['home']['social']['facebook']);
+        $this->assertArrayHasKey('description', $strings['en']['home']['social']['facebook']);
+        $this->assertArrayHasKey('twitter', $strings['en']['home']['social']);
+        $this->assertArrayHasKey('title', $strings['en']['home']['social']['twitter']);
+        $this->assertArrayHasKey('content', $strings['en']['home']['social']['twitter']);
+        $this->assertArrayHasKey('description', $strings['en']['home']['social']['twitter']);
     }
 
     public function testStringsAreGeneratedWithAppendedSheet()
     {
-        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
-        $this->filesystem->shouldReceive('makeDirectory')->times(6);
-        $this->filesystem->shouldReceive('put')->times(6);
-
         $this->lazyStrings->setCsvUrl($this->url);
         $this->lazyStrings->setSheets([
             'en' => [0, 1626663029],
@@ -102,25 +214,81 @@ class LazyStringsTest extends TestCase
             'pt' => 1443604037,
         ]);
 
+        $this->setUpMocks();
+
         $expectedStrings = [
             'en' => [
-                'foo' => 'Hello!',
-                'lazy' => 'LazyStrings',
+                'title' => 'Your page title',
+                'tagline' => 'Your page tagline',
                 'laravel' => 'PHP Framework',
-                'something.else.here' => 'Yeah',
-                'another.thing' => 'extra value in EN',
-                'another.extra-thing' => 'This is an extra thing',
-                'another.in-english' => 'Another on in English',
+                'header' => [
+                    'hero' => [
+                        'headline' => 'Hero headlines',
+                        'subject' => 'Main hero subject',
+                    ]
+                ],
+                'footer' => [
+                    'notice' => 'All rights reserved',
+                    'copyrights' => 'Copyrights copy',
+                ],
+                'home' => [
+                    'welcome' => [
+                        'tutorial' => [
+                            'title' => 'Tutorial Title',
+                            'description' => 'Tutorial Description',
+                        ],
+                        'picks' => [
+                            'title' => 'Picks Title',
+                            'description' => 'Picks Description',
+                        ],
+                    ],
+                    'social' => [
+                        'facebook' => [
+                            'title' => 'Facebook Title',
+                            'content' => 'Facebook Content',
+                            'description' => 'Facebook Description',
+                        ],
+                        'twitter' => [
+                            'title' => 'Twitter Title',
+                            'content' => 'Twitter Content',
+                            'description' => 'Twitter Description',
+                        ]
+                    ]
+                ],
+                'poll' => [
+                    'question' => [
+                        '1' => [
+                            'title' => 'Title of your question',
+                            'answers' => [
+                                'a' => 'First answer',
+                                'b' => 'Second answer',
+                                'c' => 'Third answer',
+                                'd' => 'Fourth answer',
+                            ]
+                        ]
+                    ]
+                ],
             ]
         ];
 
         $strings = $this->lazyStrings->generate();
 
         $this->assertSame($strings['en'], $expectedStrings['en']);
-        $this->assertArrayHasKey('foo', $strings['en']);
-        $this->assertArrayHasKey('lazy', $strings['en']);
-        $this->assertArrayHasKey('another.thing', $strings['en']);
-        $this->assertArrayHasKey('another.extra-thing', $strings['en']);
-        $this->assertArrayHasKey('another.in-english', $strings['en']);
+        $this->assertArrayHasKey('poll', $strings['en']);
+        $this->assertArrayHasKey('question', $strings['en']['poll']);
+        $this->assertArrayHasKey('1', $strings['en']['poll']['question']);
+        $this->assertArrayHasKey('title', $strings['en']['poll']['question']['1']);
+        $this->assertArrayHasKey('answers', $strings['en']['poll']['question']['1']);
+        $this->assertArrayHasKey('a', $strings['en']['poll']['question']['1']['answers']);
+        $this->assertArrayHasKey('b', $strings['en']['poll']['question']['1']['answers']);
+        $this->assertArrayHasKey('c', $strings['en']['poll']['question']['1']['answers']);
+        $this->assertArrayHasKey('d', $strings['en']['poll']['question']['1']['answers']);
+    }
+
+    protected function setUpMocks()
+    {
+        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
+        $this->filesystem->shouldReceive('makeDirectory')->times(6);
+        $this->filesystem->shouldReceive('put')->times(6);
     }
 }
