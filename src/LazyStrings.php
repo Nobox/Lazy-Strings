@@ -120,9 +120,9 @@ class LazyStrings
             throw new Exception('Provided doc url is not valid.');
         }
 
-        $strings = [];
-
         $this->validator->validateSheets($this->sheets);
+
+        $strings = [];
 
         foreach ($this->sheets as $locale => $csvId) {
             // create locale directories (if any)
