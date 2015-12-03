@@ -98,6 +98,25 @@ class StrTest extends TestCase
         $this->assertSame($fiveDimensions, $this->str->convertToArray('about.projects.freelance.php.first', 'This is my first project'));
     }
 
+    public function testConvertDottedStringToArrayWithSixDimensions()
+    {
+        $sixDimensions = [
+            'about' => [
+                'footer' => [
+                    'social' => [
+                        'twitter' => [
+                            'followers' => [
+                                'count' => '500'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertSame($sixDimensions, $this->str->convertToArray('about.footer.social.twitter.followers.count', '500'));
+    }
+
     public function testConvertDottedStringWithNumericKeysToArray()
     {
         $expected = [
