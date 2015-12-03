@@ -42,18 +42,19 @@ class StrTest extends TestCase
         $this->assertFalse($this->str->hasDots($noDots));
     }
 
-    public function testConvertDottedStringToArray()
+    public function testConvertDottedStringToArrayWithTwoDimensions()
     {
-        $oneDimension = [
-            'title' => 'This is your page title'
-        ];
-
         $twoDimensions = [
             'tagline' => [
                 'cta' => 'Click here'
             ]
         ];
 
+        $this->assertSame($twoDimensions, $this->str->convertToArray('tagline.cta', 'Click here'));
+    }
+
+    public function testConvertDottedStringToArrayWithThreeDimensions()
+    {
         $threeDimensions = [
             'meta' => [
                 'seo' => [
@@ -62,6 +63,11 @@ class StrTest extends TestCase
             ]
         ];
 
+        $this->assertSame($threeDimensions, $this->str->convertToArray('meta.seo.description', 'This is some description'));
+    }
+
+    public function testConvertDottedStringToArrayWithFourDimensions()
+    {
         $fourDimensions = [
             'home' => [
                 'howto' => [
@@ -72,6 +78,11 @@ class StrTest extends TestCase
             ]
         ];
 
+        $this->assertSame($fourDimensions, $this->str->convertToArray('home.howto.wildcard.title', 'The wildcard title'));
+    }
+
+    public function testConvertDottedStringToArrayWithFiveDimensions()
+    {
         $fiveDimensions = [
             'about' => [
                 'projects' => [
@@ -84,11 +95,26 @@ class StrTest extends TestCase
             ]
         ];
 
-        $this->assertSame($oneDimension, $this->str->convertToArray('title', 'This is your page title'));
-        $this->assertSame($twoDimensions, $this->str->convertToArray('tagline.cta', 'Click here'));
-        $this->assertSame($threeDimensions, $this->str->convertToArray('meta.seo.description', 'This is some description'));
-        $this->assertSame($fourDimensions, $this->str->convertToArray('home.howto.wildcard.title', 'The wildcard title'));
         $this->assertSame($fiveDimensions, $this->str->convertToArray('about.projects.freelance.php.first', 'This is my first project'));
+    }
+
+    public function testConvertDottedStringToArrayWithSixDimensions()
+    {
+        $sixDimensions = [
+            'about' => [
+                'footer' => [
+                    'social' => [
+                        'twitter' => [
+                            'followers' => [
+                                'count' => '500'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $this->assertSame($sixDimensions, $this->str->convertToArray('about.footer.social.twitter.followers.count', '500'));
     }
 
     public function testConvertDottedStringWithNumericKeysToArray()
@@ -104,13 +130,5 @@ class StrTest extends TestCase
         ];
 
         $this->assertSame($expected, $this->str->convertToArray('question.1.answers.a', 'This is some answer.'));
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testArrayHasTooManyDimensions()
-    {
-        $this->str->convertToArray('one.two.three.four.five.six', 'Hello World.');
     }
 }
