@@ -10,7 +10,7 @@ use Nobox\LazyStrings\Validators\LazyValidator;
 
 class LazyStrings
 {
-    const VERSION = '3.1.0';
+    const VERSION = '4.0.0';
 
     /**
      * Google doc url.
