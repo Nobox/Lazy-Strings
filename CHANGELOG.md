@@ -2,7 +2,7 @@
 
 #### v3.1.0 `2015-12-02`
 - `Added`
-    - Generated php language files are now nested arrays. Useful to loop through copy lines. Support is up to 5 dimension levels. See [#7](https://github.com/Nobox/Lazy-Strings/issues/7)
+    - Generated php language files are now nested arrays. Useful to loop through copy lines. See [#7](https://github.com/Nobox/Lazy-Strings/issues/7)
 
 #### v3.0.0 `2015-09-04`
 - `Change`
