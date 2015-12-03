@@ -1,7 +1,7 @@
 # Changelog
 
-#### v3.1.0 `2015-12-02`
-- `Added`
+#### v4.0.0 `2015-12-03`
+- `Change`
     - Generated php language files are now nested arrays. Useful to loop through copy lines. See [#7](https://github.com/Nobox/Lazy-Strings/issues/7)
 
 #### v3.0.0 `2015-09-04`
