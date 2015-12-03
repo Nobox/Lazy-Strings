@@ -44,10 +44,6 @@ class StrTest extends TestCase
 
     public function testConvertDottedStringToArray()
     {
-        $oneDimension = [
-            'title' => 'This is your page title'
-        ];
-
         $twoDimensions = [
             'tagline' => [
                 'cta' => 'Click here'
@@ -84,7 +80,6 @@ class StrTest extends TestCase
             ]
         ];
 
-        $this->assertSame($oneDimension, $this->str->convertToArray('title', 'This is your page title'));
         $this->assertSame($twoDimensions, $this->str->convertToArray('tagline.cta', 'Click here'));
         $this->assertSame($threeDimensions, $this->str->convertToArray('meta.seo.description', 'This is some description'));
         $this->assertSame($fourDimensions, $this->str->convertToArray('home.howto.wildcard.title', 'The wildcard title'));
@@ -104,13 +99,5 @@ class StrTest extends TestCase
         ];
 
         $this->assertSame($expected, $this->str->convertToArray('question.1.answers.a', 'This is some answer.'));
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    public function testArrayHasTooManyDimensions()
-    {
-        $this->str->convertToArray('one.two.three.four.five.six', 'Hello World.');
     }
 }
