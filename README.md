@@ -12,13 +12,13 @@ composer require nobox/lazy-strings
 ```
 
 ## Notes on Laravel versions
-If you're using Laravel `5.0` you should use version `v1.1.*`. This is the last version that supports Laravel `5.0`. Here's a rundown:
+Here's a rundown on the version(s) of lazy strings that you can use on your current installed laravel version.
 
 | Laravel Version     | LazyStrings Version to use    |
 | ------------------- | ----------------------------- |
-| 5.1                 | ^3.0 or ^2.0                  |
-| 5.0                 | 1.1.*                         |
-| 4.0                 | dev-laravel-4                 |
+| 5.1                 | `^4.0` `^3.0` `^2.0` `^1.2`   |
+| 5.0                 | `1.1.*`                       |
+| 4.0                 | `dev-laravel-4`               |
 
 ## Register Lazy Strings
 Register Lazy Strings service provider in the `providers` array located in `config/app.php`
