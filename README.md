@@ -16,6 +16,7 @@ Here's a rundown on the version(s) of lazy strings that you can use on your curr
 
 | Laravel Version     | LazyStrings Version to use    |
 | ------------------- | ----------------------------- |
+| 5.2                 | `4.1.*`                       |
 | 5.1                 | `4.0.*` `^3.0` `^2.0` `^1.2`  |
 | 5.0                 | `1.1.*`                       |
 | 4.0                 | `dev-laravel-4`               |
