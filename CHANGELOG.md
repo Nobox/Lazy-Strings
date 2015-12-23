@@ -1,5 +1,9 @@
 # Changelog
 
+#### v4.1.0 `2015-12-23`
+- `Added`
+    - Support for Laravel `5.2`
+
 #### v4.0.0 `2015-12-03`
 - `Change`
     - Generated php language files are now nested arrays. Useful to loop through copy lines. See [#7](https://github.com/Nobox/Lazy-Strings/issues/7)
