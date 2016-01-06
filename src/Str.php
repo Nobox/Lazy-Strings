@@ -2,8 +2,6 @@
 
 namespace Nobox\LazyStrings;
 
-use Exception;
-
 class Str
 {
     /**
