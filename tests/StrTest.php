@@ -1,6 +1,6 @@
 <?php
 
-namespace Nobox\LazyStrings\Tests\Helpers;
+namespace Nobox\LazyStrings\Tests;
 
 use Nobox\LazyStrings\Helpers\Str;
 use Orchestra\Testbench\TestCase;

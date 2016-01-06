@@ -1,11 +1,11 @@
 <?php
 
-namespace Nobox\LazyStrings\Tests\Validators;
+namespace Nobox\LazyStrings\Tests;
 
 use Nobox\LazyStrings\Validators\LazyValidator;
 use Orchestra\Testbench\TestCase;
 
-class LazyValidatorTest extends TestCase
+class ValidatorTest extends TestCase
 {
     protected $validator;
 
