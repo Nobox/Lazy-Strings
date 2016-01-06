@@ -371,6 +371,27 @@ class LazyStringsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
+     */
+    public function it_gets_strings_metadata()
+    {
+        $lazyStrings = new LazyStrings([
+            'url' => $this->url,
+            'sheets' => [
+                'en' => 0,
+                'es' => 1329731586,
+                'pt' => 1443604037,
+            ],
+            'target' => __DIR__,
+            'backup' => __DIR__,
+            'nested' => true
+        ]);
+
+        $this->assertArrayHasKey('refreshedBy', $lazyStrings->getMetadata());
+        $this->assertArrayHasKey('refreshedOn', $lazyStrings->getMetadata());
+    }
+
+    /**
      * Remove generated file.
      *
      * @return void
