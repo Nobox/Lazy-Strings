@@ -345,6 +345,10 @@ class LazyStringsTest extends PHPUnit_Framework_TestCase
      */
     private function removeDirectory($path)
     {
+        if (!file_exists($path)) {
+            return;
+        }
+
         $iterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
         $files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
 
