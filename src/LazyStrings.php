@@ -142,8 +142,12 @@ class LazyStrings
                     $id = $this->str->strip($row[0]);
                     $value = $row[1];
 
-                    if ($this->str->hasDots($id)) {
-                        $strings = array_replace_recursive($strings, $this->str->convertToArray($id, $value));
+                    if ($this->nested) {
+                        if ($this->str->hasDots($id)) {
+                            $strings = array_replace_recursive($strings, $this->str->convertToArray($id, $value));
+                        } else {
+                            $strings[$id] = $value;
+                        }
                     } else {
                         $strings[$id] = $value;
                     }

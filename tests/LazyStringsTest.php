@@ -303,6 +303,52 @@ class LazyStringsTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_generates_unnested_strings()
+    {
+        $lazyStrings = new LazyStrings([
+            'url' => $this->url,
+            'sheets' => [
+                'en' => 0,
+            ],
+            'target' => __DIR__,
+            'backup' => __DIR__,
+            'nested' => false
+        ]);
+
+        $strings = $lazyStrings->generate();
+
+        $expectedStrings = [
+            'en' => [
+                'title' => 'Your page title',
+                'tagline' => 'Your page tagline',
+                'laravel' => 'PHP Framework',
+                'header.hero.headline' => 'Hero headlines',
+                'header.hero.subject' => 'Main hero subject',
+                'footer.notice' => 'All rights reserved',
+                'footer.copyrights' => 'Copyrights copy',
+                'home.welcome.tutorial.title' => 'Tutorial Title',
+                'home.welcome.tutorial.description' => 'Tutorial Description',
+                'home.welcome.picks.title' => 'Picks Title',
+                'home.welcome.picks.description' => 'Picks Description',
+                'home.social.facebook.title' => 'Facebook Title',
+                'home.social.facebook.content' => 'Facebook Content',
+                'home.social.facebook.description' => 'Facebook Description',
+                'home.social.twitter.title' => 'Twitter Title',
+                'home.social.twitter.content' => 'Twitter Content',
+                'home.social.twitter.description' => 'Twitter Description',
+            ]
+        ];
+
+        $this->assertSame($strings, $expectedStrings);
+        $this->assertArrayHasKey('title', $strings['en']);
+        $this->assertArrayHasKey('tagline', $strings['en']);
+        $this->assertArrayHasKey('header.hero.headline', $strings['en']);
+        $this->assertArrayHasKey('home.welcome.tutorial.description', $strings['en']);
+    }
+
+    /**
+     * @test
+     */
     public function it_stores_strings_in_json_format()
     {
         $lazyStrings = new LazyStrings([
