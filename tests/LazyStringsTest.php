@@ -26,7 +26,7 @@ class LazyStringsTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Cleanup generated strings directories.
+     * Cleanup generated strings directories and files.
      *
      * @return void
      */
@@ -35,6 +35,9 @@ class LazyStringsTest extends PHPUnit_Framework_TestCase
         $this->removeDirectory(__DIR__.'/en');
         $this->removeDirectory(__DIR__.'/es');
         $this->removeDirectory(__DIR__.'/pt');
+        $this->removeFile(__DIR__.'/es.json');
+        $this->removeFile(__DIR__.'/en.json');
+        $this->removeFile(__DIR__.'/pt.json');
     }
 
     /**
@@ -295,6 +298,42 @@ class LazyStringsTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('b', $strings['en']['poll']['question']['1']['answers']);
         $this->assertArrayHasKey('c', $strings['en']['poll']['question']['1']['answers']);
         $this->assertArrayHasKey('d', $strings['en']['poll']['question']['1']['answers']);
+    }
+
+    /**
+     * @test
+     */
+    public function it_stores_strings_in_json_format()
+    {
+        $lazyStrings = new LazyStrings([
+            'url' => $this->url,
+            'sheets' => [
+                'en' => 0,
+                'es' => 1329731586,
+                'pt' => 1443604037,
+            ],
+            'target' => __DIR__,
+            'backup' => __DIR__,
+            'nested' => true
+        ]);
+
+        $strings = $lazyStrings->generate();
+
+        $this->assertTrue(file_exists(__DIR__.'/es.json'));
+        $this->assertTrue(file_exists(__DIR__.'/en.json'));
+        $this->assertTrue(file_exists(__DIR__.'/pt.json'));
+    }
+
+    /**
+     * Remove generated file.
+     *
+     * @return void
+     */
+    private function removeFile($path)
+    {
+        if (file_exists($path)) {
+            unlink($path);
+        }
     }
 
     /**

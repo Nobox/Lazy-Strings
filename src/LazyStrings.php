@@ -33,6 +33,13 @@ class LazyStrings
     private $target;
 
     /**
+     * Path where the strings in json format will be stored.
+     *
+     * @var string
+     */
+    private $backup;
+
+    /**
      * Filename for the generated language file.
      *
      * @var string
@@ -72,6 +79,7 @@ class LazyStrings
         $this->csvUrl = $settings['url'];
         $this->sheets = $settings['sheets'];
         $this->target = $settings['target'];
+        $this->backup = $settings['backup'];
         $this->nested = $settings['nested'];
         $this->str = new Str();
         $this->validator = new Validator();
@@ -109,8 +117,8 @@ class LazyStrings
 
             file_put_contents($stringsFile, $phpFormatted);
 
-            // save strings in storage
-            // $this->backup($localized, $this->targetFolder, $locale . '.json');
+            // save strings in json format
+            $this->backup($localized, $this->backup, $locale . '.json');
         }
 
         return $strings;
@@ -174,24 +182,20 @@ class LazyStrings
     }
 
     /**
-     * Save backup strings in storage (JSON format)
+     * Save backup strings in JSON format
      *
-     * @param array $strings Parsed strings
-     * @param string $folder Folder to store strings
-     * @param string $file Strings filename
+     * @param array $strings
+     * @param string $path
+     * @param string $filename
      *
      * @return void
      */
-    private function backup(array $strings, $folder, $file)
+    private function backup(array $strings, $path, $filename)
     {
-        $stringsPath = storage_path() . '/' . $folder;
-
-        $this->createDirectory($stringsPath);
-
-        $stringsFile = $stringsPath . '/' . $file;
+        $stringsFile = $path . '/' . $filename;
         $jsonStrings = json_encode($strings, JSON_PRETTY_PRINT);
 
-        $this->file->put($stringsFile, $jsonStrings);
+        file_put_contents($stringsFile, $jsonStrings);
     }
 
     /**
