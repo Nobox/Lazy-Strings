@@ -1,10 +1,10 @@
 <?php
 
-namespace Nobox\LazyStrings\Validators;
+namespace Nobox\LazyStrings;
 
 use Exception;
 
-class LazyValidator
+class Validator
 {
     /**
      * Provided url must be a valid google doc url.

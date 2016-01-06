@@ -1,6 +1,6 @@
 <?php
 
-namespace Nobox\LazyStrings\Helpers;
+namespace Nobox\LazyStrings;
 
 use Exception;
 
