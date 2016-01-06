@@ -2,17 +2,15 @@
 
 namespace Nobox\LazyStrings\Tests;
 
-use Nobox\LazyStrings\Helpers\Str;
-use Orchestra\Testbench\TestCase;
+use Nobox\LazyStrings\Str;
+use PHPUnit_Framework_TestCase;
 
-class StrTest extends TestCase
+class StrTest extends PHPUnit_Framework_TestCase
 {
     protected $str;
 
     public function setUp()
     {
-        parent::setUp();
-
         $this->str = new Str();
     }
 

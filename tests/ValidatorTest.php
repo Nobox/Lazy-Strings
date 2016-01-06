@@ -2,18 +2,16 @@
 
 namespace Nobox\LazyStrings\Tests;
 
-use Nobox\LazyStrings\Validators\LazyValidator;
-use Orchestra\Testbench\TestCase;
+use Nobox\LazyStrings\Validator;
+use PHPUnit_Framework_TestCase;
 
-class ValidatorTest extends TestCase
+class ValidatorTest extends PHPUnit_Framework_TestCase
 {
     protected $validator;
 
     public function setUp()
     {
-        parent::setUp();
-
-        $this->validator = new LazyValidator();
+        $this->validator = new Validator();
     }
 
     public function testValidDocUrl()
