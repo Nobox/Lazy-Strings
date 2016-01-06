@@ -238,28 +238,4 @@ class LazyStrings
     {
         return $this->metadata;
     }
-
-    /**
-     * Set the google doc url.
-     *
-     * @param string $url The google doc url.
-     *
-     * @return void
-     */
-    public function setCsvUrl($url)
-    {
-        $this->csvUrl = $url;
-    }
-
-    /**
-     * Set the tabs of doc spreadsheet.
-     *
-     * @param array $sheets The array of sheets id's.
-     *
-     * @return void
-     */
-    public function setSheets(array $sheets)
-    {
-        $this->sheets = $sheets;
-    }
 }
