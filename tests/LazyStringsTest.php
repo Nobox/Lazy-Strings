@@ -2,51 +2,57 @@
 
 namespace Nobox\LazyStrings\Tests;
 
-use Illuminate\Filesystem\Filesystem;
 use Mockery;
-use Nobox\LazyStrings\Helpers\Str;
+use Nobox\LazyStrings\Str;
 use Nobox\LazyStrings\LazyStrings;
-use Nobox\LazyStrings\Validators\LazyValidator;
-use Orchestra\Testbench\TestCase;
+use Nobox\LazyStrings\Validator;
+use PHPUnit_Framework_TestCase;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
-class LazyStringsTest extends TestCase
+class LazyStringsTest extends PHPUnit_Framework_TestCase
 {
-    protected $lazyStrings;
-    protected $filesystem;
-    protected $validator;
-    protected $str;
-    protected $url = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
+    private $url = 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv';
 
     public function setUp()
     {
-        parent::setUp();
-
-        $this->filesystem = Mockery::mock('Illuminate\Filesystem\Filesystem');
-        $this->validator = new LazyValidator;
-        $this->str = new Str;
-        $this->lazyStrings = new LazyStrings($this->filesystem, $this->validator, $this->str);
+        $settings = [
+            'url' => 'csv url',
+            'sheets' => [], // sheets array mapping
+            'target' => '', // location where to store the strings array
+            'backup' => '', // location where to store the strings json
+            'nested' => false // whether or not you want to use nested strings
+        ];
     }
 
+    /**
+     * Cleanup generated strings directories.
+     *
+     * @return void
+     */
     public function tearDown()
     {
-        Mockery::close();
+        $this->removeDirectory(__DIR__.'/en');
+        $this->removeDirectory(__DIR__.'/es');
+        $this->removeDirectory(__DIR__.'/pt');
     }
 
-    protected function getPackageProviders($app)
+    /**
+     * @test
+     */
+    public function nested_strings_are_generated_from_google_docs()
     {
-        return ['Nobox\LazyStrings\LazyStringsServiceProvider'];
-    }
-
-    public function testStringsAreGeneratedFromGoogleDoc()
-    {
-        $this->lazyStrings->setCsvUrl($this->url);
-        $this->lazyStrings->setSheets([
-            'en' => 0,
-            'es' => 1329731586,
-            'pt' => 1443604037,
+        $lazyStrings = new LazyStrings([
+            'url' => $this->url,
+            'sheets' => [
+                'en' => 0,
+                'es' => 1329731586,
+                'pt' => 1443604037,
+            ],
+            'target' => __DIR__,
+            'backup' => __DIR__,
+            'nested' => true
         ]);
-
-        $this->setUpMocks();
 
         $expectedStrings = [
             'en' => [
@@ -170,7 +176,7 @@ class LazyStringsTest extends TestCase
             ],
         ];
 
-        $strings = $this->lazyStrings->generate();
+        $strings = $lazyStrings->generate();
 
         $this->assertSame($strings, $expectedStrings);
         $this->assertArrayHasKey('en', $strings);
@@ -205,16 +211,22 @@ class LazyStringsTest extends TestCase
         $this->assertArrayHasKey('description', $strings['en']['home']['social']['twitter']);
     }
 
-    public function testStringsAreGeneratedWithAppendedSheet()
+    /**
+     * @test
+     */
+    public function nested_strings_are_generated_from_google_docs_with_appended_sheet()
     {
-        $this->lazyStrings->setCsvUrl($this->url);
-        $this->lazyStrings->setSheets([
-            'en' => [0, 1626663029],
-            'es' => 1329731586,
-            'pt' => 1443604037,
+        $lazyStrings = new LazyStrings([
+            'url' => $this->url,
+            'sheets' => [
+                'en' => [0, 1626663029],
+                'es' => 1329731586,
+                'pt' => 1443604037,
+            ],
+            'target' => __DIR__,
+            'backup' => __DIR__,
+            'nested' => true
         ]);
-
-        $this->setUpMocks();
 
         $expectedStrings = [
             'en' => [
@@ -271,7 +283,7 @@ class LazyStringsTest extends TestCase
             ]
         ];
 
-        $strings = $this->lazyStrings->generate();
+        $strings = $lazyStrings->generate();
 
         $this->assertSame($strings['en'], $expectedStrings['en']);
         $this->assertArrayHasKey('poll', $strings['en']);
@@ -285,10 +297,26 @@ class LazyStringsTest extends TestCase
         $this->assertArrayHasKey('d', $strings['en']['poll']['question']['1']['answers']);
     }
 
-    protected function setUpMocks()
+    /**
+     * Remove a directory and it's contents.
+     *
+     * @param string $path
+     *
+     * @return void
+     */
+    private function removeDirectory($path)
     {
-        $this->filesystem->shouldReceive('exists')->times(6)->andReturn(false);
-        $this->filesystem->shouldReceive('makeDirectory')->times(6);
-        $this->filesystem->shouldReceive('put')->times(6);
+        $iterator = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS);
+        $files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::CHILD_FIRST);
+
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                rmdir($file->getRealPath());
+            } else {
+                unlink($file->getRealPath());
+            }
+        }
+
+        rmdir($path);
     }
 }

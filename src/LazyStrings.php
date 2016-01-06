@@ -3,10 +3,8 @@
 namespace Nobox\LazyStrings;
 
 use Exception;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Request;
-use Nobox\LazyStrings\Helpers\Str;
-use Nobox\LazyStrings\Validators\LazyValidator;
+use Nobox\LazyStrings\Str;
+use Nobox\LazyStrings\Validator;
 
 class LazyStrings
 {
@@ -27,25 +25,12 @@ class LazyStrings
     private $sheets;
 
     /**
-     * Folder where the JSON strings will be stored.
+     * Path where the strings array file will be stored.
+     * Separated by locale.
      *
      * @var string
      */
-    private $targetFolder;
-
-    /**
-     * Strings generation route.
-     *
-     * @var string
-     */
-    private $route;
-
-    /**
-     * Path to locale folder.
-     *
-     * @var string
-     */
-    private $localePath;
+    private $target;
 
     /**
      * Filename for the generated language file.
@@ -62,48 +47,35 @@ class LazyStrings
     private $metadata = [];
 
     /**
-     * Filesystem implementation.
-     *
-     * @var Illuminate\Filesystem\Filesystem
-     */
-    private $file;
-
-    /**
      * String helper.
      *
-     * @var Nobox\LazyStrings\Helpers\Str
+     * @var Nobox\LazyStrings\Str
      */
     private $str;
 
     /**
      * Lazy validator.
      *
-     * @var Nobox\LazyStrings\Validators\LazyValidator
+     * @var Nobox\LazyStrings\Validator
      */
     private $validator;
 
     /**
-     * Initial setup. Setting values from config files.
+     * Initial setup.
      *
-     * @param Illuminate\Filesystem\Filesystem $file Filesystem implementation.
-     * @param Nobox\LazyStrings\Validators\LazyValidator $validator Lazy validator.
-     * @param Nobox\LazyStrings\Helpers\Str $str String helper.
+     * @param array $settings
      *
      * @return void
      */
-    public function __construct(Filesystem $file, LazyValidator $validator, Str $str)
+    public function __construct(array $settings)
     {
-        $this->csvUrl = config('lazy-strings.csv-url');
-        $this->sheets = config('lazy-strings.sheets');
-        $this->targetFolder = config('lazy-strings.target-folder');
-        $this->route = config('lazy-strings.strings-route');
-
-        $this->file = $file;
-        $this->str = $str;
-        $this->validator = $validator;
-        $this->localePath = base_path() . '/resources/lang';
-
-        $this->metadata['refreshedBy'] = Request::server('DOCUMENT_ROOT');
+        $this->csvUrl = $settings['url'];
+        $this->sheets = $settings['sheets'];
+        $this->target = $settings['target'];
+        $this->nested = $settings['nested'];
+        $this->str = new Str();
+        $this->validator = new Validator();
+        $this->metadata['refreshedBy'] = $_SERVER['DOCUMENT_ROOT'];
         $this->metadata['refreshedOn'] = date(DATE_RFC822, time());
     }
 
@@ -125,20 +97,20 @@ class LazyStrings
         $strings = [];
 
         foreach ($this->sheets as $locale => $csvId) {
-            // create locale directories (if any)
-            $this->createDirectory($this->localePath . '/' . $locale);
+            // create locale directories
+            $this->createDirectory($this->target . '/' . $locale);
 
             $localized = $this->localize($csvId);
             $strings[$locale] = $localized;
 
             // create strings in language file
-            $stringsFile = $this->localePath . '/' . $locale . '/' . $this->languageFilename . '.php';
+            $stringsFile = $this->target . '/' . $locale . '/' . $this->languageFilename . '.php';
             $phpFormatted = '<?php return ' . var_export($localized, true) . ';';
 
-            $this->file->put($stringsFile, $phpFormatted);
+            file_put_contents($stringsFile, $phpFormatted);
 
             // save strings in storage
-            $this->backup($localized, $this->targetFolder, $locale . '.json');
+            // $this->backup($localized, $this->targetFolder, $locale . '.json');
         }
 
         return $strings;
@@ -226,14 +198,14 @@ class LazyStrings
      * Create the specified directory.
      * Check if it exists first.
      *
-     * @param string $path The folder path.
+     * @param string $path
      *
      * @return void
      */
     private function createDirectory($path)
     {
-        if (!$this->file->exists($path)) {
-            $this->file->makeDirectory($path, 0777);
+        if (!file_exists($path)) {
+            mkdir($path, 0777);
         }
     }
 
