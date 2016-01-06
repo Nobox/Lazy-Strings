@@ -214,26 +214,6 @@ class LazyStrings
     }
 
     /**
-     * Get the tabs of doc spreadsheet.
-     *
-     * @return array
-     */
-    public function getSheets()
-    {
-        return $this->sheets;
-    }
-
-    /**
-     * Get the strings generation route name.
-     *
-     * @return string
-     */
-    public function getRoute()
-    {
-        return $this->route;
-    }
-
-    /**
      * Get string generation metadata.
      *
      * @return array
