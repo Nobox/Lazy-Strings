@@ -199,6 +199,8 @@ class LazyStrings
         $stringsFile = $path . '/' . $filename;
         $jsonStrings = json_encode($strings, JSON_PRETTY_PRINT);
 
+        $this->createDirectory($path);
+
         file_put_contents($stringsFile, $jsonStrings);
     }
 
