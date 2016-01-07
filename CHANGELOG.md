@@ -1,5 +1,10 @@
 # Changelog
 
+#### v5.0.0 `2016-01-07`
+- `Added`
+    - Package is now framework agnostic. You can now use it in any php 5.4+ project.
+    - You can find a laravel service provider [here](https://github.com/Nobox/lazy-strings-laravel).
+
 #### v4.1.0 `2015-12-23`
 - `Added`
     - Support for Laravel `5.2`
