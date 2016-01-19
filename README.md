@@ -69,7 +69,7 @@ Using these settings it will generate the following translation files in `path/t
 ### `backup`
 Here you must specify a path where to store your translations in JSON format. More like a "backup" of your strings.
 ```php
-'target' => 'path/to/strings/folder'
+'backup' => 'path/to/strings/folder'
 ```
 Using these settings it will generate the following translation files in `path/to/strings/folder`.
 ```
