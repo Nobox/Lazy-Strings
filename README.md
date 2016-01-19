@@ -1,6 +1,6 @@
 # Lazy Strings
 
-Laravel 5 package that creates localized strings from a Google Docs Spreadsheet.
+Create localized strings from a Google Docs Spreadsheet.
 
 [![Build Status](https://travis-ci.org/Nobox/Lazy-Strings.svg?branch=master)](https://travis-ci.org/Nobox/Lazy-Strings)
 
@@ -11,49 +11,36 @@ Add Lazy Strings to your composer.json file.
 composer require nobox/lazy-strings
 ```
 
-## Notes on Laravel versions
-Here's a rundown on the version(s) of lazy strings that you can use on your current installed laravel version.
-
-| Laravel Version     | LazyStrings Version to use    |
-| ------------------- | ----------------------------- |
-| 5.2                 | `4.1.*`                       |
-| 5.1                 | `4.0.*` `^3.0` `^2.0` `^1.2`  |
-| 5.0                 | `1.1.*`                       |
-| 4.0                 | `dev-laravel-4`               |
-
-## Register Lazy Strings
-Register Lazy Strings service provider in the `providers` array located in `config/app.php`
+## Usage
+Create an instance of LazyStrings with the following settings.
 ```php
-'providers' => [
-    Nobox\LazyStrings\LazyStringsServiceProvider::class
-]
+$lazyStrings = new LazyStrings([
+    'url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv',
+    'sheets' => [
+        'en' => 0,
+    ],
+    'target' => 'path/to/strings/folder',
+    'backup' => 'path/to/strings/folder',
+    'nested' => true
+]);
 ```
 
-## Publish configuration and assets
-This package uses some basic configuration and pretty CSS and JS from bootstrap.
-```bash
-php artisan vendor:publish
-```
-
-## Configuration
-Configuration is pretty simple, each configuration item is described below.
-
-- `csv-url` Add the Google spreadsheet published url under `File -> Publish to the web...`, replace `pubhtml` with `export?format=csv` at the end and use `http` on the url. Remember that this document must be available to anyone. Use `Public on the web` on your `Sharing settings`. If not, Lazy Strings won't be able to parse it.
+And generate your strings with the `generate();` method.
 ```php
-'csv-url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv'
+$lazyStrings->generate();
 ```
 
-- `target-folder` This folder will be in your `storage` folder and it just saves a backup of your strings in `JSON` format. By default is `lazy-strings`.
+## Settings
+Each setting key item is described below.
+
+### `url`
+Add the Google spreadsheet published url. This should be done with `File -> Publish to the web...`, replace `pubhtml` with `export?format=csv` at the end and use `http` on the url. Remember that this document must be available to anyone. Use `Public on the web` on your `Sharing settings`. If not, Lazy Strings won't be able to parse it.
 ```php
-'target-folder' => 'lazy-strings'
+'url' => 'http://docs.google.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/export?format=csv'
 ```
 
-- `strings-route` This is the route that will be used to generate the strings. Visit `http://my-app.com/lazy/build-copy` and your strings will be updated. By default is `build-copy`. The route will always be under the `lazy` prefix.
-```php
-'strings-route' => 'build-copy'
-```
-
-- `sheets` Here you'll specify all the sheets in your Google doc (if it's more than one) with their id, each separated by locale. Use an array if using more than one sheet for a locale. Example:
+### `sheets`
+Here you'll specify all the sheets in your Google doc (if it's more than one) with their id, each separated by locale. Use an array if using more than one sheet for a locale. Example:
 ```php
 'sheets' => [
     'en' => [0, 1626663029],
@@ -63,29 +50,84 @@ Configuration is pretty simple, each configuration item is described below.
 ```
 You can take the id from the spreadsheet using the `gid` variable from your Google doc url. For example, in this spreadsheet: https://docs.google.com/a/nobox.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/edit#gid=1626663029 the id is `1626663029`.
 
+### `target`
+Here you must specify a path where to store your translations.
+```php
+'target' => 'path/to/strings/folder'
+```
+Using these settings it will generate the following translation files in `path/to/strings/folder`.
+```
+├── folder/
+│   ├── en/
+│   │   ├── lazy.php
+│   ├── es/
+│   │   ├── lazy.php
+│   ├── pt/
+│   │   ├── lazy.php
+```
+
+### `backup`
+Here you must specify a path where to store your translations in JSON format. More like a "backup" of your strings.
+```php
+'target' => 'path/to/strings/folder'
+```
+Using these settings it will generate the following translation files in `path/to/strings/folder`.
+```
+├── folder/
+│   ├── es.json
+│   ├── en.json
+│   ├── pt.json
+```
+
+### `nested`
+Specify whether or not you want your translations array to be nested.
+```php
+'nested' => true
+```
+
+If you use the nested setting as `true` your translations will look like something like this:
+```php
+<?php return array (
+    'title' => 'Your page title',
+    'tagline' => 'Your page tagline',
+    'laravel' => 'PHP Framework',
+    'header' => array (
+        'hero' => array (
+            'headline' => 'Hero headlines',
+            'subject' => 'Main hero subject',
+        ),
+    ),
+);
+```
+
+And like this with `false`.
+```php
+<?php return array (
+    'title' => 'Your page title',
+    'tagline' => 'Your page tagline',
+    'laravel' => 'PHP Framework',
+    'header.hero.headline' => 'Hero headlines',
+    'header.hero.subject' => 'Main hero subject',
+);
+```
+
 ## How it works
-Lazy Strings uses an `id => value` convention to access the copy, it generates an `lazy.php` file inside the specified language locale folder. You can see an example doc here: https://docs.google.com/a/nobox.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/edit#gid=0.
+Lazy Strings uses an `id => value` convention to access the copy, it generates a `lazy.php` file inside the specified language locale folder. You can see an example doc [here](https://docs.google.com/a/nobox.com/spreadsheets/d/1V_cHt5Fe4x9XwVepvlXB39sqKXD3xs_QbM-NppkrE4A/edit#gid=0).
 
-| id            | value         |
-| ------------- | ------------- |
-| foo           | Hello!        |
-| lazy          | LazyStrings   |
-| laravel       | PHP Framework |
+| id                   | value             |
+| -------------------- | ----------------- |
+| title                | Your page title   |
+| tagline              | Your page tagline |
+| laravel              | PHP Framework     |
+| header.hero.headline | Hero headlines    |
+| header.hero.subject  | Main hero subject |
 
-In this doc you can access the first row in your view like this:
+Using this example doc (with nested translations) you can access the first row like this:
 ```php
-trans('lazy.foo'); // returns "Hello!"
+$locale = 'en';
+$strings = require 'path/to/strings/folder/'.$locale.'/lazy.php';
+echo $strings['title']; // Returns "Your page title"
 ```
 
-Or in your controller like this:
-```php
-Lang::get('lazy.foo'); // returns "Hello!"
-```
-
-## Generate your strings
-Each time you need to generate your strings just visit the specified `strings-route` in your configuration. The route will always be under the `lazy` prefix. For example: `http://my-app.com/lazy/build-copy`
-
-You can also use the included artisan command `php artisan lazy:deploy`. It will do exactly the same. This is perfect when you're deploying your application with Forge or Envoyer.
-
-## Still using Laravel 4?
-Refer to the [laravel-4](https://github.com/Nobox/Lazy-Strings/tree/laravel-4) branch.
+## License
+MIT
