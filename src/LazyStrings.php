@@ -8,7 +8,7 @@ use Nobox\LazyStrings\Validator;
 
 class LazyStrings
 {
-    const VERSION = '5.0.0';
+    const VERSION = '5.0.1';
 
     /**
      * Google doc url.
