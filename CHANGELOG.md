@@ -1,5 +1,9 @@
 # Changelog
 
+#### v5.0.1 `2016-05-03`
+- `Fixed`
+    - Empty id's are not being parsed. See [#11](https://github.com/Nobox/Lazy-Strings/issues/11)
+
 #### v5.0.0 `2016-01-07`
 - `Added`
     - Package is now framework agnostic. You can now use it in any php 5.4+ project.
