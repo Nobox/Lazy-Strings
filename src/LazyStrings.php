@@ -138,7 +138,7 @@ class LazyStrings
 
         if ($csvFile !== false) {
             while (($row = fgetcsv($csvFile, 1000, ',')) !== false) {
-                if ($row[0] !== 'id') {
+                if ($row[0] !== '' && $row[0] !== 'id') {
                     $id = $this->str->strip($row[0]);
                     $value = $row[1];
 
